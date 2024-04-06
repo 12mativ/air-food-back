@@ -2,12 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { FlightService } from './flight.service';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/role/role.enum';
 
 @Controller('flight')
 export class FlightController {
   constructor(private readonly flightService: FlightService) {}
 
   @Post()
+  @Roles(Role.Admin)
   create(@Body() createFlightDto: CreateFlightDto) {
     return this.flightService.create(createFlightDto);
   }
