@@ -13,6 +13,12 @@ export type User = {
 export class UsersService {
   private readonly users: User[] = [
     {
+      userId: 0,
+      username: 'admin',
+      password: 'admin',
+      roles: [Role.Admin]
+    },
+    {
       userId: 1,
       username: 'john',
       password: 'changeme',
