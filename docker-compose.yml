@@ -21,9 +21,12 @@ services:
       - DATABASE_URL=postgres://postgre:postgre@postgres:5432/postgre
     ports:
       - 5432:5432
+    environment:
+      POSTGRES_USER: postgre
+      POSTGRES_PASSWORD: postgre
+      POSTGRES_DB: postgre
     volumes:
       - postgres:/var/lib/postgresql/data
 
 volumes:
   postgres:
-    name: nest-db
