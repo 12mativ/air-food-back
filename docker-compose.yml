@@ -9,17 +9,18 @@ services:
       - 3000:3000
     depends_on:
       - postgres
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=postgres://postgre:postgre@postgres:5432/postgre
+      - JWT_SECRET=1HFWKHJHHWKJjh23-23rjhwbkfwk-12bbkwFHKJJKAHFjfj
 
   postgres:
     image: postgres:13
     container_name: postgres
     restart: always
+    environment:
+      - DATABASE_URL=postgres://postgre:postgre@postgres:5432/postgre
     ports:
       - 5432:5432
-    env_file:
-      - .env
     volumes:
       - postgres:/var/lib/postgresql/data
 

@@ -1,24 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, ValidationPipe } from '@nestjs/common';
+import { Role } from 'src/role/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { AirplaneService } from './airplane.service';
 import { CreateAirplaneDto } from './dto/create-airplane.dto';
 import { UpdateAirplaneDto } from './dto/update-airplane.dto';
-import { Roles } from 'src/roles/roles.decorator';
-import { Role } from 'src/role/role.enum';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { RolesGuard } from 'src/roles/roles.guard';
 
 @Controller('airplane')
 export class AirplaneController {
   constructor(private readonly airplaneService: AirplaneService) {}
 
   @Post()
-  create(@Body() createAirplaneDto: CreateAirplaneDto) {
+  create(@Body(new ValidationPipe()) createAirplaneDto: CreateAirplaneDto) {
     return this.airplaneService.create(createAirplaneDto);
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
   @Get()
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   findAll() {
     return this.airplaneService.findAll();
   }

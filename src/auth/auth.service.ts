@@ -1,25 +1,66 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Role } from 'src/role/role.enum';
+import { RegisterDto } from './dto/registerDto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
     private jwtService: JwtService,
+    private readonly prisma: PrismaService
   ) {}
 
-  async signIn(username: string, pass: string) {
-    const user = await this.usersService.findOne(username);
+  async isUserExistInDB(username: string): Promise<any> {
+    return this.prisma.user.findFirst({
+      where: {
+        username
+      }
+    })
+  }
 
-    if (user?.password !== pass) {
-      throw new UnauthorizedException();
+  async getAllUsers() {
+    return this.prisma.user.findMany()
+  }
+
+  async register(registerDto: RegisterDto) {
+    const foundUser = await this.isUserExistInDB(registerDto.username);
+
+    if (foundUser) {
+      throw new BadRequestException('Пользователь с таким email уже зарегистрирован')
     }
 
-    const payload = {sub: user.userId, username: user.username, roles: user.roles};
+    return this.prisma.user.create({
+      data: {
+        username: registerDto.username,
+        password: await bcrypt.hash(registerDto.password, 10),
+        roles: registerDto.roles
+      }
+    })
+  }
+
+  async login(username: string, pass: string) {
+    // const user = await this.usersService.findOne(username);
+
+    const user = await this.prisma.user.findFirst({
+      where: {username}
+    }) 
+
+    if (!user) {
+      throw new BadRequestException("Неверный логин или пароль")
+    }
+
+    const isPasswordEqual = await bcrypt.compare(pass, user.password);
+
+    if (!isPasswordEqual) {
+      throw new BadRequestException("Неверный логин или пароль");
+    }
+
+    const payload = {sub: user.id, username: user.username, roles: user.roles};
     
     return {
-      access_token: await this.jwtService.signAsync(payload)
+      jwt: await this.jwtService.signAsync(payload)
     }
   }
 }

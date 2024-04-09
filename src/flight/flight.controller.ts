@@ -10,7 +10,7 @@ export class FlightController {
   constructor(private readonly flightService: FlightService) {}
 
   @Post()
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   create(@Body() createFlightDto: CreateFlightDto) {
     return this.flightService.create(createFlightDto);
   }

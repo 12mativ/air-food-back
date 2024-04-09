@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id String   @id @default(uuid())
+  username String @db.Text
+  password String @db.Text
+  roles String[]
+}
+
 model Flight {
   id         String   @id @default(uuid())
   startCity  String   @db.Text
