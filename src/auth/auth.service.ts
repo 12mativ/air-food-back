@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private readonly prisma: PrismaService
-  ) {}
+  ) { }
 
   async isUserExistInDB(username: string): Promise<any> {
     return this.prisma.user.findFirst({
@@ -31,11 +31,28 @@ export class AuthService {
       throw new BadRequestException('Пользователь с таким email уже зарегистрирован')
     }
 
+    // await this.prisma.pilot.create({
+    //   data: {
+    //     username: registerDto.username,
+    //     userId //todo как тут получить айди новосозданного юзера
+    //   } 
+    // })
+
+    console.log(registerDto.roles.includes(Role.PILOT))
+    const pilot = registerDto.roles.includes(Role.PILOT)
+      ? {
+        create: {
+          username: registerDto.username
+        }
+      }
+      : {}
+
     return this.prisma.user.create({
       data: {
         username: registerDto.username,
         password: await bcrypt.hash(registerDto.password, 10),
-        roles: registerDto.roles
+        roles: registerDto.roles,
+        pilot: pilot
       }
     })
   }
@@ -44,8 +61,8 @@ export class AuthService {
     // const user = await this.usersService.findOne(username);
 
     const user = await this.prisma.user.findFirst({
-      where: {username}
-    }) 
+      where: { username }
+    })
 
     if (!user) {
       throw new BadRequestException("Неверный логин или пароль")
@@ -57,8 +74,8 @@ export class AuthService {
       throw new BadRequestException("Неверный логин или пароль");
     }
 
-    const payload = {sub: user.id, username: user.username, roles: user.roles};
-    
+    const payload = { sub: user.id, username: user.username, roles: user.roles };
+
     return {
       jwt: await this.jwtService.signAsync(payload)
     }
