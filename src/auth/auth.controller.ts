@@ -15,6 +15,7 @@ export class AuthController {
     return this.authService.login(signInDto.username, signInDto.password);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('register')
   @Public()
   register(@Body(new ValidationPipe()) registerDto: RegisterDto) {

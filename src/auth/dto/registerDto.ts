@@ -1,4 +1,4 @@
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsNotEmptyObject, IsString } from "class-validator"
+import { ArrayNotEmpty, IsArray, IsEnum, IsString } from "class-validator"
 import { Role } from "src/role/role.enum"
 
 export class RegisterDto {
@@ -10,5 +10,6 @@ export class RegisterDto {
 
   @IsArray()
   @ArrayNotEmpty()
+  @IsEnum(Role, {each: true, message: "Недопустимое значение роли, доступные значения: PILOT, COURSE_ORGANISER"})
   roles: Role[]
 }
