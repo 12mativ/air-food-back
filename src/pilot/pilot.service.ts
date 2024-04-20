@@ -28,7 +28,22 @@ export class PilotService {
     });
   }
 
-  async findAll() {
-    return await this.prisma.pilot.findMany()
+  async findAll(page: number, limit: number) {
+    let pageValue = page;
+    let limitValue = limit;
+    if (!page) {
+      pageValue = 1
+    }
+
+    if (!limit) {
+      limitValue = 10
+    }
+    return await this.prisma.pilot.findMany({
+      skip: (pageValue - 1) * limitValue,
+      take: limitValue,
+      orderBy: {
+        id: 'asc'
+      }
+    })
   }
 }

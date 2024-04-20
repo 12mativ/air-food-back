@@ -31,14 +31,6 @@ export class AuthService {
       throw new BadRequestException('Пользователь с таким email уже зарегистрирован')
     }
 
-    // await this.prisma.pilot.create({
-    //   data: {
-    //     username: registerDto.username,
-    //     userId //todo как тут получить айди новосозданного юзера
-    //   } 
-    // })
-
-    console.log(registerDto.roles.includes(Role.PILOT))
     const pilot = registerDto.roles.includes(Role.PILOT)
       ? {
         create: {
@@ -47,7 +39,7 @@ export class AuthService {
       }
       : {}
 
-    return this.prisma.user.create({
+    const newUser = await this.prisma.user.create({
       data: {
         username: registerDto.username,
         password: await bcrypt.hash(registerDto.password, 10),
@@ -55,11 +47,15 @@ export class AuthService {
         pilot: pilot
       }
     })
+
+    const payload = { sub: newUser.id, username: newUser.username, roles: newUser.roles };
+
+    return {
+      jwt: await this.jwtService.signAsync(payload)
+    }
   }
 
   async login(username: string, pass: string) {
-    // const user = await this.usersService.findOne(username);
-
     const user = await this.prisma.user.findFirst({
       where: { username }
     })

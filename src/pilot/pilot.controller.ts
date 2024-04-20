@@ -7,17 +7,22 @@ import { Role } from 'src/role/role.enum';
 
 @Controller('pilot')
 export class PilotController {
-  constructor(private readonly pilotService: PilotService) {}
-  
+  constructor(private readonly pilotService: PilotService) { }
+
   @Get()
   @Roles(Role.ADMIN)
-  findAll() {
-    return this.pilotService.findAll();
+  findAll(
+    @Query('page') page: string, 
+    @Query('limit') limit: string
+  ) {
+    return this.pilotService.findAll(+page, +limit);
   }
-  
+
   @Get('find')
   @Roles(Role.ADMIN)
-  findOne(@Query('pilotForSearch') pilotForSearch: string) {
+  findOne(
+    @Query('pilotForSearch') pilotForSearch: string, 
+  ) {
     return this.pilotService.findPilotsForString(pilotForSearch);
-  } 
+  }
 }
