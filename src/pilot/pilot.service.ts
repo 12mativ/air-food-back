@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Pilot } from './entities/pilot.entity';
 
 @Injectable()
 export class PilotService {
@@ -28,7 +29,7 @@ export class PilotService {
     });
   }
 
-  async findAll(page: number, limit: number) {
+  async findAll(page: number, limit: number): Promise<{pilots: Pilot[]; pilotsTotalAmount: number}> {
     let pageValue = page;
     let limitValue = limit;
     if (!page) {
@@ -38,12 +39,19 @@ export class PilotService {
     if (!limit) {
       limitValue = 10
     }
-    return await this.prisma.pilot.findMany({
+
+    const pilotsTotalAmount = await this.prisma.pilot.count()
+    
+    const pilots = await this.prisma.pilot.findMany({
       skip: (pageValue - 1) * limitValue,
       take: limitValue,
       orderBy: {
         id: 'asc'
-      }
+      },
     })
+
+    const payload = {pilots: pilots, pilotsTotalAmount: pilotsTotalAmount}
+
+    return payload;
   }
 }

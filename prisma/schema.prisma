@@ -26,28 +26,3 @@ model Pilot {
 
   userId String @unique
 }
-
-model Flight {
-  id         String   @id @default(uuid())
-  startCity  String   @db.Text
-  endCity    String   @db.Text
-  startDate  DateTime
-  endDate    DateTime
-  airplane  Airplane @relation(fields: [airplaneId], references: [id], onDelete: Cascade)
-  airplaneId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([airplaneId])
-}
-
-model Airplane {
-  id           String   @id @default(uuid())
-  airplaneName String   @db.Text
-  capacity     Int
-  flights      Flight[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
