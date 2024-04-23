@@ -1,35 +1,28 @@
-import { AuthService } from './auth.service';
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request, UseGuards, ValidationPipe } from '@nestjs/common';
-import { SignInDto } from './dto/signInDto';
+import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/app.decorator';
-import { RegisterDto } from './dto/registerDto';
+import { AuthService } from './auth.service';
+import { LoginRequestDto } from './dto/login-request.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { RegisterRequestDto } from './dto/register-request.dto';
+import { RegisterResponseDto } from './dto/register-response.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Post('login')
+  @ApiOkResponse({type: LoginResponseDto})
   @Public()
-  login(@Body(new ValidationPipe()) signInDto: SignInDto) {
-    return this.authService.login(signInDto.username, signInDto.password);
+  login(@Body(new ValidationPipe()) loginDto: LoginRequestDto): Promise<LoginResponseDto> {
+    return this.authService.login(loginDto);
   }
 
-  @HttpCode(HttpStatus.OK)
   @Post('register')
+  @ApiOkResponse({type: RegisterResponseDto})
   @Public()
-  register(@Body(new ValidationPipe()) registerDto: RegisterDto) {
+  register(@Body(new ValidationPipe()) registerDto: RegisterRequestDto): Promise<RegisterResponseDto> {
     return this.authService.register(registerDto);
-  }
-
-  @Get('users')
-  @Public()
-  getUsers(@Request() req) {
-    return this.authService.getAllUsers()
-  }
-  
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
   }
 }

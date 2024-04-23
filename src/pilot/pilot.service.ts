@@ -1,57 +1,101 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Pilot } from './entities/pilot.entity';
+import { GetPilotsResponseDto } from './dto/get-pilots-response.dto';
+import { UpdatePilotRequestDto } from './dto/update-pilot-request.dto';
 
 @Injectable()
 export class PilotService {
   constructor(private readonly prisma: PrismaService) {}
-  async findPilotsForString(pilotForSearch: string) {
-    return await this.prisma.pilot.findMany({
-      where: {
-        OR: [
-          {
-            username: {
-              contains: pilotForSearch
+  async findPilots(pilotForSearch: string, page: number, limit: number): Promise<GetPilotsResponseDto> {
+    let pilotsTotalAmount;
+    let pilots;
+
+    page = page ? page : 1 
+    limit = limit ? limit : 10 
+
+    if (pilotForSearch) {
+      pilotsTotalAmount = await this.prisma.pilot.count({
+        where: {
+          OR: [
+            {
+              email: {
+                contains: pilotForSearch
+              },
             },
-          },
-          {
-           firstName: {
-            contains: pilotForSearch
-           }
-          },
-          {
-            lastName: {
-             contains: pilotForSearch
-            }
-           }
-        ]
-      }
-    });
-  }
+            {
+             firstName: {
+              contains: pilotForSearch
+             }
+            },
+            {
+              lastName: {
+               contains: pilotForSearch
+              }
+             }
+          ]
+        },
+      })
 
-  async findAll(page: number, limit: number): Promise<{pilots: Pilot[]; pilotsTotalAmount: number}> {
-    let pageValue = page;
-    let limitValue = limit;
-    if (!page) {
-      pageValue = 1
+      pilots = await this.prisma.pilot.findMany({
+        where: {
+          OR: [
+            {
+              email: {
+                contains: pilotForSearch
+              },
+            },
+            {
+             firstName: {
+              contains: pilotForSearch
+             }
+            },
+            {
+              lastName: {
+               contains: pilotForSearch
+              }
+             }
+          ]
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: {
+          id: 'asc'
+        },
+      });
+      
+    } else {
+      pilotsTotalAmount = await this.prisma.pilot.count()
+      pilots = await this.prisma.pilot.findMany({
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: {
+          id: 'asc'
+        },
+      })
     }
-
-    if (!limit) {
-      limitValue = 10
-    }
-
-    const pilotsTotalAmount = await this.prisma.pilot.count()
-    
-    const pilots = await this.prisma.pilot.findMany({
-      skip: (pageValue - 1) * limitValue,
-      take: limitValue,
-      orderBy: {
-        id: 'asc'
-      },
-    })
 
     const payload = {pilots: pilots, pilotsTotalAmount: pilotsTotalAmount}
 
     return payload;
+  }
+
+  async updatePilot(id: string, updatePilotDto: UpdatePilotRequestDto) {
+    const {firstName, lastName, birthDate} = updatePilotDto
+    try {
+      const updatedPilot = await this.prisma.pilot.update({
+        where: {
+          id
+        },
+        data: {
+          firstName,
+          lastName,
+          birthDate
+        }
+      })
+  
+      return updatedPilot;
+    } catch (e) {
+      throw new BadRequestException("Произошла ошибка при обновлении данных обучающегося.")
+    }
   }
 }

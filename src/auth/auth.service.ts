@@ -1,9 +1,12 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from 'src/role/role.enum';
-import { RegisterDto } from './dto/registerDto';
-import * as bcrypt from 'bcrypt';
+import { LoginRequestDto } from './dto/login-request.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { RegisterRequestDto } from './dto/register-request.dto';
+import { RegisterResponseDto } from './dto/register-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,65 +15,65 @@ export class AuthService {
     private readonly prisma: PrismaService
   ) { }
 
-  async isUserExistInDB(username: string): Promise<any> {
+  async isUserExistInDB(email: string): Promise<any> {
     return this.prisma.user.findFirst({
       where: {
-        username
+        email
       }
     })
   }
 
-  async getAllUsers() {
-    return this.prisma.user.findMany()
-  }
-
-  async register(registerDto: RegisterDto) {
-    const foundUser = await this.isUserExistInDB(registerDto.username);
+  async register(registerDto: RegisterRequestDto): Promise<RegisterResponseDto> {
+    const {email, password, roles} = registerDto
+    
+    const foundUser = await this.isUserExistInDB(email);
 
     if (foundUser) {
       throw new BadRequestException('Пользователь с таким email уже зарегистрирован')
     }
 
-    const pilot = registerDto.roles.includes(Role.PILOT)
+    const pilot = roles.includes(Role.PILOT)
       ? {
         create: {
-          username: registerDto.username
+          email: email
         }
       }
       : {}
 
     const newUser = await this.prisma.user.create({
       data: {
-        username: registerDto.username,
-        password: await bcrypt.hash(registerDto.password, 10),
-        roles: registerDto.roles,
+        email: email,
+        password: await bcrypt.hash(password, 10),
+        roles: roles,
         pilot: pilot
       }
     })
 
-    const payload = { sub: newUser.id, username: newUser.username, roles: newUser.roles };
+    const payload = { sub: newUser.id, email: newUser.email, roles: newUser.roles };
 
     return {
       jwt: await this.jwtService.signAsync(payload)
     }
   }
 
-  async login(username: string, pass: string) {
+  async login(loginDto: LoginRequestDto): Promise<LoginResponseDto> {
+    const {email, password} = loginDto
+    
     const user = await this.prisma.user.findFirst({
-      where: { username }
+      where: { email }
     })
 
     if (!user) {
       throw new BadRequestException("Неверный логин или пароль")
     }
 
-    const isPasswordEqual = await bcrypt.compare(pass, user.password);
+    const isPasswordEqual = await bcrypt.compare(password, user.password);
 
     if (!isPasswordEqual) {
       throw new BadRequestException("Неверный логин или пароль");
     }
 
-    const payload = { sub: user.id, username: user.username, roles: user.roles };
+    const payload = { sub: user.id, email: user.email, roles: user.roles };
 
     return {
       jwt: await this.jwtService.signAsync(payload)

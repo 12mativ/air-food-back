@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { IsDateString, IsString } from "class-validator";
 
 export class Pilot {
     @ApiProperty()
@@ -8,7 +8,7 @@ export class Pilot {
 
     @ApiProperty()
     @IsString()
-    username: string;
+    email: string;
 
     @ApiProperty()
     @IsString()
@@ -19,8 +19,8 @@ export class Pilot {
     lastName: string;
     
     @ApiProperty()
-    @IsNumber()
-    age: number;
+    @IsString()
+    birthDate: string;
 
     @ApiProperty()
     @IsString()

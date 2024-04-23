@@ -8,8 +8,8 @@ datasource db {
 }
 
 model User {
-  id String   @id @default(uuid())
-  username String @db.Text
+  id String   @id @default(uuid()) @unique
+  email String @db.Text
   password String @db.Text
   roles String[]
 
@@ -17,11 +17,11 @@ model User {
 }
 
 model Pilot {
-  id String   @id @default(uuid())
-  username String @db.Text
+  id String   @id @default(uuid()) @unique
+  email String @db.Text
   firstName String? @db.Text
   lastName String? @db.Text
-  age Int? @db.Integer
+  birthDate String? @db.Text
   user User @relation(fields: [userId], references: [id])
 
   userId String @unique
