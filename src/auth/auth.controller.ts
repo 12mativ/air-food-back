@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post, ValidationPipe } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/app.decorator';
 import { AuthService } from './auth.service';
@@ -11,6 +11,11 @@ import { RegisterResponseDto } from './dto/register-response.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get()
+  check(@Headers('Authorization') auth: string) {
+    return {jwt: auth.replace(/^Bearer\s/, "")}
+  }
 
   @Post('login')
   @ApiOkResponse({type: LoginResponseDto})
