@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString, IsString } from "class-validator";
 
-export class Pilot {
+export class Student {
     @ApiProperty()
     @IsString()
     id: string;

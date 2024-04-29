@@ -16,6 +16,6 @@ export class RegisterRequestDto {
   @ApiProperty()
   @IsArray()
   @ArrayNotEmpty()
-  @IsEnum(Role, {each: true, message: "Недопустимое значение роли, доступные значения: PILOT, COURSE_ORGANISER"})
+  @IsEnum(Role, {each: true, message: "Недопустимое значение роли, доступные значения: STUDENT, COURSE_ORGANISER"})
   roles: Role[]
 }

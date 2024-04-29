@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { PilotModule } from './pilot/pilot.module';
+import { StudentModule } from './student/student.module';
 import { CourseModule } from './course/course.module';
 
 @Module({
@@ -10,7 +10,7 @@ import { CourseModule } from './course/course.module';
     PrismaModule,
     AuthModule,
     ConfigModule.forRoot(),
-    PilotModule,
+    StudentModule,
     CourseModule,
   ],
   // controllers: [AppController],

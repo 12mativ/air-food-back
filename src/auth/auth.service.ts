@@ -32,7 +32,7 @@ export class AuthService {
       throw new BadRequestException('Пользователь с таким email уже зарегистрирован')
     }
 
-    const pilot = roles.includes(Role.PILOT)
+    const student = roles.includes(Role.STUDENT)
       ? {
         create: {
           email: email
@@ -45,7 +45,7 @@ export class AuthService {
         email: email,
         password: await bcrypt.hash(password, 10),
         roles: roles,
-        pilot: pilot
+        student: student
       }
     })
 

@@ -13,10 +13,10 @@ model User {
   password String   @db.Text
   roles    String[]
 
-  pilot Pilot?
+  student Student?
 }
 
-model Pilot {
+model Student {
   id        String  @id @default(uuid())
   email     String  @db.Text
   firstName String? @db.Text

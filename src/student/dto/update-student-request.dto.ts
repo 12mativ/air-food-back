@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsOptional, IsString } from 'class-validator';
 
-// export class UpdatePilotDto extends PartialType(Pilot) {}
+// export class UpdateStudentDto extends PartialType(Student) {}
 
-export class UpdatePilotRequestDto {
+export class UpdateStudentRequestDto {
     @ApiProperty()
     @IsString()
     @IsOptional()

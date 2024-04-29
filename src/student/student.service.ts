@@ -1,57 +1,57 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { GetPilotsResponseDto } from './dto/get-pilots-response.dto';
-import { UpdatePilotRequestDto } from './dto/update-pilot-request.dto';
+import { GetStudentsResponseDto } from './dto/get-students-response.dto';
+import { UpdateStudentRequestDto } from './dto/update-student-request.dto';
 
 @Injectable()
-export class PilotService {
+export class StudentService {
   constructor(private readonly prisma: PrismaService) {}
-  async findPilots(pilotForSearch: string, page: number, limit: number): Promise<GetPilotsResponseDto> {
-    let pilotsTotalAmount;
-    let pilots;
+  async findStudents(studentForSearch: string, page: number, limit: number): Promise<GetStudentsResponseDto> {
+    let studentsTotalAmount;
+    let students;
 
     page = page ? page : 1 
     limit = limit ? limit : 10 
 
-    if (pilotForSearch) {
-      pilotsTotalAmount = await this.prisma.pilot.count({
+    if (studentForSearch) {
+      studentsTotalAmount = await this.prisma.student.count({
         where: {
           OR: [
             {
               email: {
-                contains: pilotForSearch
+                contains: studentForSearch
               },
             },
             {
              firstName: {
-              contains: pilotForSearch
+              contains: studentForSearch
              }
             },
             {
               lastName: {
-               contains: pilotForSearch
+               contains: studentForSearch
               }
              }
           ]
         },
       })
 
-      pilots = await this.prisma.pilot.findMany({
+      students = await this.prisma.student.findMany({
         where: {
           OR: [
             {
               email: {
-                contains: pilotForSearch
+                contains: studentForSearch
               },
             },
             {
              firstName: {
-              contains: pilotForSearch
+              contains: studentForSearch
              }
             },
             {
               lastName: {
-               contains: pilotForSearch
+               contains: studentForSearch
               }
              }
           ]
@@ -64,8 +64,8 @@ export class PilotService {
       });
       
     } else {
-      pilotsTotalAmount = await this.prisma.pilot.count()
-      pilots = await this.prisma.pilot.findMany({
+      studentsTotalAmount = await this.prisma.student.count()
+      students = await this.prisma.student.findMany({
         skip: (page - 1) * limit,
         take: limit,
         orderBy: {
@@ -74,15 +74,15 @@ export class PilotService {
       })
     }
 
-    const payload = {pilots: pilots, pilotsTotalAmount: pilotsTotalAmount}
+    const payload = {students: students, studentsTotalAmount: studentsTotalAmount}
 
     return payload;
   }
 
-  async updatePilot(id: string, updatePilotDto: UpdatePilotRequestDto) {
-    const {firstName, lastName, birthDate} = updatePilotDto
+  async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
+    const {firstName, lastName, birthDate} = updateStudentDto
     try {
-      const updatedPilot = await this.prisma.pilot.update({
+      const updatedStudent = await this.prisma.student.update({
         where: {
           id
         },
@@ -93,7 +93,7 @@ export class PilotService {
         }
       })
   
-      return updatedPilot;
+      return updatedStudent;
     } catch (e) {
       throw new BadRequestException("Произошла ошибка при обновлении данных обучающегося.")
     }
