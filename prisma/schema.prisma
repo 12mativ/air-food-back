@@ -8,21 +8,130 @@ datasource db {
 }
 
 model User {
-  id String   @id @default(uuid()) @unique
-  email String @db.Text
-  password String @db.Text
-  roles String[]
+  id       String   @id @default(uuid())
+  email    String   @db.Text
+  password String   @db.Text
+  roles    String[]
 
   pilot Pilot?
 }
 
 model Pilot {
-  id String   @id @default(uuid()) @unique
-  email String @db.Text
+  id        String  @id @default(uuid())
+  email     String  @db.Text
   firstName String? @db.Text
-  lastName String? @db.Text
+  lastName  String? @db.Text
   birthDate String? @db.Text
-  user User @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
 
   userId String @unique
+}
+
+model Course {
+  id                       String                     @id @default(uuid())
+  name                     String                     @db.Text
+  startDate                String                     @db.Text
+  endDate                  String                     @db.Text
+  
+  prerequisiteCompetencies CompetenceCharacteristic[]
+  competencies             CompetenciesOnCourses[]
+  events                   Event[]
+}
+
+model Competence {
+  id                       String                    @id @default(uuid())
+  name                     String                    @db.Text
+  
+  improvingCompetence      ImprovingCompetence?
+  competenceCharacteristic CompetenceCharacteristic?
+}
+
+model ImprovingCompetence {
+  id             String @id @default(uuid())
+  improvingValue Int    @default(0) @db.SmallInt
+  competenceId String                  @unique
+
+  courses      CompetenciesOnCourses[]
+  competence   Competence              @relation(fields: [competenceId], references: [id])
+}
+
+model CompetenceCharacteristic {
+  scaleValue   Int        @db.SmallInt
+  competenceId String     @unique
+  courseId     String?
+  
+  competence   Competence @relation(fields: [competenceId], references: [id])
+  course       Course?    @relation(fields: [courseId], references: [id])
+}
+
+model CompetenciesOnCourses {
+  courseId     String
+  competenceId String
+
+  course       Course              @relation(fields: [courseId], references: [id])
+  competence   ImprovingCompetence @relation(fields: [competenceId], references: [id])
+
+  @@id([courseId, competenceId])
+}
+
+model Event {
+  id                 String  @id @default(uuid())
+  name               String  @db.Text
+  startDate          String  @db.Text
+  endDate            String  @db.Text
+  courseId   String               @unique
+  
+  prerequisiteEvents Event[] @relation("EventPrerequisiteEvents")
+  eventsRelation     Event[] @relation("EventPrerequisiteEvents")
+  course     Course               @relation(fields: [courseId], references: [id])
+  coaches    CoachesOnEvents[]
+  simulators SimulatorsOnEvents[]
+}
+
+model Coach {
+  id         String                @id @default(uuid())
+  firstName  String?               @db.Text
+  surname    String?               @db.Text
+  lastName   String?               @db.Text
+
+  events     CoachesOnEvents[]
+  simulators CoachesOnSimulators[]
+}
+
+model CoachesOnEvents {
+  coachId String
+  eventId String
+
+  coach   Coach  @relation(fields: [coachId], references: [id])
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@id([coachId, eventId])
+}
+
+model Simulator {
+  id      String                @id @default(uuid())
+  name    String                @db.Text
+
+  events  SimulatorsOnEvents[]
+  coaches CoachesOnSimulators[]
+}
+
+model CoachesOnSimulators {
+  coachId     String
+  simulatorId String
+
+  coach       Coach     @relation(fields: [coachId], references: [id])
+  simulator   Simulator @relation(fields: [simulatorId], references: [id])
+
+  @@id([coachId, simulatorId])
+}
+
+model SimulatorsOnEvents {
+  simulatorId String
+  eventId     String
+  
+  simulator   Simulator @relation(fields: [simulatorId], references: [id])
+  event       Event     @relation(fields: [eventId], references: [id])
+
+  @@id([simulatorId, eventId])
 }
