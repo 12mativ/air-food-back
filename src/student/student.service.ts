@@ -6,12 +6,16 @@ import { UpdateStudentRequestDto } from './dto/update-student-request.dto';
 @Injectable()
 export class StudentService {
   constructor(private readonly prisma: PrismaService) {}
-  async findStudents(studentForSearch: string, page: number, limit: number): Promise<GetStudentsResponseDto> {
+  async findStudents(
+    studentForSearch: string,
+    page: number,
+    limit: number,
+  ): Promise<GetStudentsResponseDto> {
     let studentsTotalAmount;
     let students;
 
-    page = page ? page : 1 
-    limit = limit ? limit : 10 
+    page = page ? page : 1;
+    limit = limit ? limit : 10;
 
     if (studentForSearch) {
       studentsTotalAmount = await this.prisma.student.count({
@@ -19,83 +23,87 @@ export class StudentService {
           OR: [
             {
               email: {
-                contains: studentForSearch
+                contains: studentForSearch,
               },
             },
             {
-             firstName: {
-              contains: studentForSearch
-             }
+              firstName: {
+                contains: studentForSearch,
+              },
             },
             {
               lastName: {
-               contains: studentForSearch
-              }
-             }
-          ]
+                contains: studentForSearch,
+              },
+            },
+          ],
         },
-      })
+      });
 
       students = await this.prisma.student.findMany({
         where: {
           OR: [
             {
               email: {
-                contains: studentForSearch
+                contains: studentForSearch,
               },
             },
             {
-             firstName: {
-              contains: studentForSearch
-             }
+              firstName: {
+                contains: studentForSearch,
+              },
             },
             {
               lastName: {
-               contains: studentForSearch
-              }
-             }
-          ]
+                contains: studentForSearch,
+              },
+            },
+          ],
         },
         skip: (page - 1) * limit,
         take: limit,
         orderBy: {
-          id: 'asc'
+          id: 'asc',
         },
       });
-      
     } else {
-      studentsTotalAmount = await this.prisma.student.count()
+      studentsTotalAmount = await this.prisma.student.count();
       students = await this.prisma.student.findMany({
         skip: (page - 1) * limit,
         take: limit,
         orderBy: {
-          id: 'asc'
+          id: 'asc',
         },
-      })
+      });
     }
 
-    const payload = {students: students, studentsTotalAmount: studentsTotalAmount}
+    const payload = {
+      students: students,
+      studentsTotalAmount: studentsTotalAmount,
+    };
 
     return payload;
   }
 
   async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
-    const {firstName, lastName, birthDate} = updateStudentDto
+    const { firstName, lastName, birthDate } = updateStudentDto;
     try {
       const updatedStudent = await this.prisma.student.update({
         where: {
-          id
+          id,
         },
         data: {
           firstName,
           lastName,
-          birthDate
-        }
-      })
-  
+          birthDate,
+        },
+      });
+
       return updatedStudent;
     } catch (e) {
-      throw new BadRequestException("Произошла ошибка при обновлении данных обучающегося.")
+      throw new BadRequestException(
+        'Произошла ошибка при обновлении данных обучающегося.',
+      );
     }
   }
 }

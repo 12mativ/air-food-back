@@ -1,8 +1,16 @@
-import { Body, Controller, Get, Param, Patch, Query, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/role/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
-import { GetStudentsResponseDto } from './dto/get-student-response.dto';
+import { GetStudentsResponseDto } from './dto/get-students-response.dto';
 import { StudentService } from './student.service';
 import { PageRequestDto } from './dto/query-page-request.dto';
 import { LimitRequestDto } from './dto/query-limit-request.dto';
@@ -13,28 +21,28 @@ import { UpdateStudentRequestDto } from './dto/update-student-request.dto';
 @ApiTags('Student')
 @Controller('student')
 export class StudentController {
-  constructor(private readonly studentService: StudentService) { }
+  constructor(private readonly studentService: StudentService) {}
 
   @Get()
   @Roles(Role.ADMIN)
   @ApiOkResponse({ type: GetStudentsResponseDto })
-  @ApiQuery({name: "page"})
-  @ApiQuery({name: "limit"})
+  @ApiQuery({ name: 'page' })
+  @ApiQuery({ name: 'limit' })
   findStudentForSearch(
     @Query('studentForSearch') studentForSearch: string,
     @Query('page') page: PageRequestDto,
-    @Query('limit') limit: LimitRequestDto
+    @Query('limit') limit: LimitRequestDto,
   ): Promise<GetStudentsResponseDto> {
     return this.studentService.findStudents(studentForSearch, +page, +limit);
   }
 
   @Roles(Role.ADMIN)
-  @ApiOkResponse({type: Student})
-  @Patch(":id")
+  @ApiOkResponse({ type: Student })
+  @Patch(':id')
   updateStudent(
-    @Param('id') id: string, 
-    @Body(new ValidationPipe()) updateStudentDto: UpdateStudentRequestDto
+    @Param('id') id: string,
+    @Body(new ValidationPipe()) updateStudentDto: UpdateStudentRequestDto,
   ): Promise<Student> {
-    return this.studentService.updateStudent(id, updateStudentDto)
+    return this.studentService.updateStudent(id, updateStudentDto);
   }
 }
