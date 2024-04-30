@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgres://postgre:postgre@localhost:5432/postgre
+      - DATABASE_URL=postgres://postgre:postgre@postgres:5432/postgre
     env_file:
       - .env
     ports:
