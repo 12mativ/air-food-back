@@ -26,7 +26,7 @@ export class Student {
     @IsDateString()
     birthDate: string;
 
-    @ApiProperty({isArray: true, type: CompetenceCharacteristic})
+    @ApiProperty()
     competences: CompetenceCharacteristic;
 
     @ApiProperty()

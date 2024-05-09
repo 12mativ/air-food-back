@@ -12,9 +12,9 @@ export class Simulator {
     @IsString()
     name: string;
 
-    @ApiProperty({isArray: true, type: Event})
+    @ApiProperty()
     events: Event[];
 
-    @ApiProperty({isArray: true, type: Coach})
+    @ApiProperty()
     coaches: Coach[];
 }

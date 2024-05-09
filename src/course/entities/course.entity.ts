@@ -21,12 +21,12 @@ export class Course {
     @ApiProperty()
     endDate: string;
     
-    @ApiProperty({isArray: true, type: CompetenceCharacteristic})
+    @ApiProperty()
     prerequisiteCompetencies: CompetenceCharacteristic[];
 
-    @ApiProperty({isArray: true, type: ImprovingCompetence})
+    @ApiProperty()
     improvingCompetencies: ImprovingCompetence[];
 
-    @ApiProperty({isArray: true, type: Event})
+    @ApiProperty()
     events: Event[];
 }

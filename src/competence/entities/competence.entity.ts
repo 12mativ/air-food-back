@@ -12,11 +12,11 @@ export class Competence {
     @IsString()
     name: string;
 
-    @ApiProperty({isArray: true, type: ImprovingCompetence})
+    @ApiProperty()
     @IsOptional()
     improvingCompetence?: ImprovingCompetence;
 
-    @ApiProperty({isArray: true, type: CompetenceCharacteristic})
+    @ApiProperty()
     @IsOptional()
     competenceCharacteristic?: CompetenceCharacteristic;
 }

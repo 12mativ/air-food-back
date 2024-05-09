@@ -16,9 +16,9 @@ export class ImprovingCompetence {
     @IsString()
     competenceId: string;
 
-    @ApiProperty({isArray: true, type: Course})
+    @ApiProperty()
     courses: Course[];
 
-    @ApiProperty({type: Competence})
+    @ApiProperty()
     competence: Competence;
 }

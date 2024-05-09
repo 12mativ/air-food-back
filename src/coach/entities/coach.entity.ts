@@ -24,9 +24,9 @@ export class Coach {
     @IsString()
     lastName?: string;
     
-    @ApiProperty({isArray: true, type: Event})
+    @ApiProperty()
     events: Event[];
 
-    @ApiProperty({isArray: true, type: Simulator})
+    @ApiProperty()
     simulators: Simulator[];
 }

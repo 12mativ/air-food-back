@@ -25,7 +25,6 @@ export class StudentController {
 
   @Get()
   @Roles(Role.ADMIN)
-  @ApiOkResponse({ type: GetStudentsResponseDto })
   @ApiQuery({ name: 'page' })
   @ApiQuery({ name: 'limit' })
   findStudentForSearch(
@@ -37,7 +36,6 @@ export class StudentController {
   }
 
   @Roles(Role.ADMIN)
-  @ApiOkResponse({ type: Student })
   @Patch(':id')
   updateStudent(
     @Param('id') id: string,

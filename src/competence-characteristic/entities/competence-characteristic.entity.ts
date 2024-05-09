@@ -18,14 +18,14 @@ export class CompetenceCharacteristic {
     @IsString()
     courseId?: string;
     
-    @ApiProperty({type: Competence})
+    @ApiProperty()
     competence: Competence;
 
-    @ApiProperty({type: Course})
+    @ApiProperty()
     @IsOptional()
     course?: Course;
 
-    @ApiProperty({type: Student})
+    @ApiProperty()
     @IsOptional()
     student?: Student;
 

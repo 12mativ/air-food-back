@@ -26,18 +26,18 @@ export class Event {
     @IsString()
     courseId: string;
 
-    @ApiProperty({isArray: true, type: Event})
+    @ApiProperty()
     prerequisiteEvents: Event[];
 
-    @ApiProperty({isArray: true, type: Event})
+    @ApiProperty()
     eventsRelation: Event[];
 
-    @ApiProperty({type: Course})
+    @ApiProperty()
     course: Course;
 
-    @ApiProperty({isArray: true, type: Coach})
+    @ApiProperty()
     coaches: Coach[];
 
-    @ApiProperty({isArray: true, type: Simulator})
+    @ApiProperty()
     simulators: Simulator[];
 }
