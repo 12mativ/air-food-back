@@ -23,7 +23,7 @@ export class CourseController {
   @Get()
   @ApiOkResponse({type: Course, isArray: true})
   @Roles(Role.ADMIN)
-  findAll(): Promise<Course[]> {
+  findAll() {
     return this.courseService.findAll();
   }
 
