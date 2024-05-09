@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { CreateImprovingCompetenceDto } from './dto/create-improving-competence.dto';
 import { UpdateImprovingCompetenceDto } from './dto/update-improving-competence.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ImprovingCompetenceService {
-  create(createImprovingCompetenceDto: CreateImprovingCompetenceDto) {
-    return 'This action adds a new improvingCompetence';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createImprovingCompetenceDto: CreateImprovingCompetenceDto) {
+    const createdImprovingCompetence = await this.prisma.improvingCompetence.create({
+      data: {
+        improvingValue: createImprovingCompetenceDto.improvingValue,
+        competenceId: createImprovingCompetenceDto.competenceId
+      }
+    })
+    return createdImprovingCompetence;
   }
 
-  findAll() {
-    return `This action returns all improvingCompetence`;
+  async findAll() {
+    const improvingCompetences = await this.prisma.improvingCompetence.findMany();
+    return improvingCompetences;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} improvingCompetence`;
+  async findOne(id: string) {
+    const imporovingCompetence = await this.prisma.improvingCompetence.findFirst({
+      where: {
+        id
+      }
+    }) 
+    return imporovingCompetence;
   }
 
-  update(id: number, updateImprovingCompetenceDto: UpdateImprovingCompetenceDto) {
+  update(id: string, updateImprovingCompetenceDto: UpdateImprovingCompetenceDto) {
     return `This action updates a #${id} improvingCompetence`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} improvingCompetence`;
   }
 }

@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } fro
 import { SimulatorService } from './simulator.service';
 import { CreateSimulatorDto } from './dto/create-simulator.dto';
 import { UpdateSimulatorDto } from './dto/update-simulator.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("Simulator")
 @Controller('simulator')
 export class SimulatorController {
   constructor(private readonly simulatorService: SimulatorService) {}
