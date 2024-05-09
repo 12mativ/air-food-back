@@ -39,13 +39,22 @@ export class AuthService {
         }
       }
       : {}
+    
+    const coach = roles.includes(Role.COACH)
+      ? {
+        create: {
+          email: email
+        }
+      }
+      : {}
 
     const newUser = await this.prisma.user.create({
       data: {
         email: email,
         password: await bcrypt.hash(password, 10),
         roles: roles,
-        student: student
+        student: student,
+        coach: coach
       }
     })
 

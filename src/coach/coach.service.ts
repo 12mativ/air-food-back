@@ -1,23 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCoachDto } from './dto/create-coach.dto';
 import { UpdateCoachDto } from './dto/update-coach.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CoachService {
-  create(createCoachDto: CreateCoachDto) {
-    return 'This action adds a new coach';
+  constructor(private prisma: PrismaService) {}
+
+  async findAll() {
+    const coaches = await this.prisma.coach.findMany();
+    return coaches;
   }
 
-  findAll() {
-    return `This action returns all coach`;
+  async findOne(id: string) {
+    const coach = await this.prisma.coach.findFirst({
+      where: {
+        id
+      }
+    })
+    return coach;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} coach`;
-  }
-
-  update(id: number, updateCoachDto: UpdateCoachDto) {
-    return `This action updates a #${id} coach`;
+  async update(id: string, updateCoachDto: UpdateCoachDto) {
+    const {email, firstName, lastName, middleName} = updateCoachDto
+    const updatedCoach = await this.prisma.coach.update({
+      where: {
+        id
+      },
+      data: {
+        email, 
+        firstName, 
+        lastName, 
+        middleName
+      }
+    })
+    return updatedCoach;
   }
 
   remove(id: number) {

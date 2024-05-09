@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CompetenceCharacteristicForCourse } from "@prisma/client";
 import { IsDateString, IsString } from "class-validator";
-import { CompetenceCharacteristic } from "src/competence-characteristic/entities/competence-characteristic.entity";
 import { Event } from "src/event/entities/event.entity";
 import { ImprovingCompetence } from "src/improving-competence/entities/improving-competence.entity";
 
@@ -22,7 +22,7 @@ export class Course {
     endDate: string;
     
     @ApiProperty()
-    prerequisiteCompetencies: CompetenceCharacteristic[];
+    prerequisiteCompetencies: CompetenceCharacteristicForCourse[];
 
     @ApiProperty()
     improvingCompetencies: ImprovingCompetence[];

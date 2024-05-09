@@ -1,1 +1,4 @@
-export class CreateCoachDto {}
+export class CreateCoachDto {
+    
+
+}

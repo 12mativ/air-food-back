@@ -1,19 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCompetenceDto } from './dto/create-competence.dto';
 import { UpdateCompetenceDto } from './dto/update-competence.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CompetenceService {
-  create(createCompetenceDto: CreateCompetenceDto) {
-    return 'This action adds a new competence';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createCompetenceDto: CreateCompetenceDto) {
+    const createdCompetence = await this.prisma.competence.create({
+      data: {
+        name: createCompetenceDto.name
+      }
+    });
+
+    return createdCompetence;
   }
 
-  findAll() {
-    return `This action returns all competence`;
+  async findAll() {
+    const competences = await this.prisma.competence.findMany();
+
+    return competences;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} competence`;
+  async findOne(id: string) {
+    const competence = await this.prisma.competence.findFirst({
+      where: {
+        id
+      }
+    })
+    return competence;
   }
 
   update(id: number, updateCompetenceDto: UpdateCompetenceDto) {

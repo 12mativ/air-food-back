@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { CompetenceCharacteristicForStudent } from "@prisma/client";
 import { IsDateString, IsOptional, IsString } from "class-validator";
-import { CompetenceCharacteristic } from "src/competence-characteristic/entities/competence-characteristic.entity";
 
 export class Student {
     @ApiProperty()
@@ -27,7 +27,7 @@ export class Student {
     birthDate: string;
 
     @ApiProperty()
-    competences: CompetenceCharacteristic;
+    competences: CompetenceCharacteristicForStudent;
 
     @ApiProperty()
     @IsString()
