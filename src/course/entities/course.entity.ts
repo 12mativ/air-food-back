@@ -1,5 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString, IsString } from "class-validator";
+import { CompetenceCharacteristic } from "src/competence-characteristic/entities/competence-characteristic.entity";
+import { Event } from "src/event/entities/event.entity";
+import { ImprovingCompetence } from "src/improving-competence/entities/improving-competence.entity";
 
 export class Course {
     @IsString()
@@ -18,7 +21,12 @@ export class Course {
     @ApiProperty()
     endDate: string;
     
-    prerequisiteCompetencies: any
-    competencies: any
-    events: any
+    @ApiProperty({isArray: true, type: CompetenceCharacteristic})
+    prerequisiteCompetencies: CompetenceCharacteristic[];
+
+    @ApiProperty({isArray: true, type: ImprovingCompetence})
+    improvingCompetencies: ImprovingCompetence[];
+
+    @ApiProperty({isArray: true, type: Event})
+    events: Event[];
 }

@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsString } from "class-validator";
+import { IsDateString, IsOptional, IsString } from "class-validator";
+import { CompetenceCharacteristic } from "src/competence-characteristic/entities/competence-characteristic.entity";
 
 export class Student {
     @ApiProperty()
@@ -11,16 +12,22 @@ export class Student {
     email: string;
 
     @ApiProperty()
+    @IsOptional()
     @IsString()
     firstName: string;
     
     @ApiProperty()
+    @IsOptional()
     @IsString()
     lastName: string;
     
     @ApiProperty()
-    @IsString()
+    @IsOptional()
+    @IsDateString()
     birthDate: string;
+
+    @ApiProperty({isArray: true, type: CompetenceCharacteristic})
+    competences: CompetenceCharacteristic;
 
     @ApiProperty()
     @IsString()

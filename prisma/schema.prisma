@@ -24,24 +24,25 @@ model Student {
   birthDate String? @db.Text
   user      User    @relation(fields: [userId], references: [id])
 
-  userId String @unique
+  competences CompetenceCharacteristic[]
+  userId      String                     @unique
 }
 
 model Course {
-  id                       String                     @id @default(uuid())
-  name                     String                     @db.Text
-  startDate                String                     @db.Text
-  endDate                  String                     @db.Text
-  
+  id        String @id @default(uuid())
+  name      String @db.Text
+  startDate String @db.Text
+  endDate   String @db.Text
+
   prerequisiteCompetencies CompetenceCharacteristic[]
-  competencies             CompetenciesOnCourses[]
+  improvingCompetencies    ImprovingCompetence[]
   events                   Event[]
 }
 
 model Competence {
-  id                       String                    @id @default(uuid())
-  name                     String                    @db.Text
-  
+  id   String @id @default(uuid())
+  name String @db.Text
+
   improvingCompetence      ImprovingCompetence?
   competenceCharacteristic CompetenceCharacteristic?
 }
@@ -49,89 +50,91 @@ model Competence {
 model ImprovingCompetence {
   id             String @id @default(uuid())
   improvingValue Int    @default(0) @db.SmallInt
-  competenceId String                  @unique
+  competenceId   String @unique
 
-  courses      CompetenciesOnCourses[]
-  competence   Competence              @relation(fields: [competenceId], references: [id])
+  courses    Course[]
+  competence Competence @relation(fields: [competenceId], references: [id])
 }
 
 model CompetenceCharacteristic {
-  scaleValue   Int        @db.SmallInt
-  competenceId String     @unique
+  scaleValue   Int     @db.SmallInt
+  competenceId String  @unique
   courseId     String?
-  
-  competence   Competence @relation(fields: [competenceId], references: [id])
-  course       Course?    @relation(fields: [courseId], references: [id])
+
+  competence Competence @relation(fields: [competenceId], references: [id])
+  course     Course?    @relation(fields: [courseId], references: [id])
+  student    Student?   @relation(fields: [studentId], references: [id])
+  studentId  String?
 }
 
-model CompetenciesOnCourses {
-  courseId     String
-  competenceId String
+// model CompetenciesOnCourses {
+//   courseId     String
+//   competenceId String
 
-  course       Course              @relation(fields: [courseId], references: [id])
-  competence   ImprovingCompetence @relation(fields: [competenceId], references: [id])
+//   course       Course              @relation(fields: [courseId], references: [id])
+//   competence   ImprovingCompetence @relation(fields: [competenceId], references: [id])
 
-  @@id([courseId, competenceId])
-}
+//   @@id([courseId, competenceId])
+// }
 
 model Event {
-  id                 String  @id @default(uuid())
-  name               String  @db.Text
-  startDate          String  @db.Text
-  endDate            String  @db.Text
-  courseId   String               @unique
-  
-  prerequisiteEvents Event[] @relation("EventPrerequisiteEvents")
-  eventsRelation     Event[] @relation("EventPrerequisiteEvents")
-  course     Course               @relation(fields: [courseId], references: [id])
-  coaches    CoachesOnEvents[]
-  simulators SimulatorsOnEvents[]
+  id        String @id @default(uuid())
+  name      String @db.Text
+  startDate String @db.Text
+  endDate   String @db.Text
+  courseId  String @unique
+
+  prerequisiteEvents Event[]     @relation("EventPrerequisiteEvents")
+  eventsRelation     Event[]     @relation("EventPrerequisiteEvents")
+  course             Course      @relation(fields: [courseId], references: [id])
+  coaches            Coach[]
+  simulators         Simulator[]
 }
 
 model Coach {
-  id         String                @id @default(uuid())
-  firstName  String?               @db.Text
-  surname    String?               @db.Text
-  lastName   String?               @db.Text
+  id        String  @id @default(uuid())
+  firstName String? @db.Text
+  surname   String? @db.Text
+  lastName  String? @db.Text
 
-  events     CoachesOnEvents[]
-  simulators CoachesOnSimulators[]
+  events     Event[]
+  simulators Simulator[]
 }
 
-model CoachesOnEvents {
-  coachId String
-  eventId String
+// model CoachesOnEvents {
+//   coachId String
+//   eventId String
 
-  coach   Coach  @relation(fields: [coachId], references: [id])
-  event   Event  @relation(fields: [eventId], references: [id])
+//   coach   Coach  @relation(fields: [coachId], references: [id])
+//   event   Event  @relation(fields: [eventId], references: [id])
 
-  @@id([coachId, eventId])
-}
+//   @@id([coachId, eventId])
+// }
 
 model Simulator {
-  id      String                @id @default(uuid())
-  name    String                @db.Text
+  id   String @id @default(uuid())
+  name String @db.Text
 
-  events  SimulatorsOnEvents[]
-  coaches CoachesOnSimulators[]
+  events  Event[]
+  coaches Coach[]
 }
 
-model CoachesOnSimulators {
-  coachId     String
-  simulatorId String
+// model CoachesOnSimulators {
+//   coachId     String
+//   simulatorId String
 
-  coach       Coach     @relation(fields: [coachId], references: [id])
-  simulator   Simulator @relation(fields: [simulatorId], references: [id])
+//   coach       Coach     @relation(fields: [coachId], references: [id])
+//   simulator   Simulator @relation(fields: [simulatorId], references: [id])
 
-  @@id([coachId, simulatorId])
-}
+//   @@id([coachId, simulatorId])
+// }
 
-model SimulatorsOnEvents {
-  simulatorId String
-  eventId     String
-  
-  simulator   Simulator @relation(fields: [simulatorId], references: [id])
-  event       Event     @relation(fields: [eventId], references: [id])
+// model SimulatorsOnEvents {
+//   simulatorId String
+//   eventId     String
 
-  @@id([simulatorId, eventId])
-}
+//   simulator   Simulator @relation(fields: [simulatorId], references: [id])
+//   event       Event     @relation(fields: [eventId], references: [id])
+
+//   @@id([simulatorId, eventId])
+// }
