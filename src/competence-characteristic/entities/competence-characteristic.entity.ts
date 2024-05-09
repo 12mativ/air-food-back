@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsInt, IsOptional } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 import { Competence } from "src/competence/entities/competence.entity";
 import { Course } from "src/course/entities/course.entity";
 import { Student } from "src/student/entities/student.entity";
 
 export class CompetenceCharacteristic {
     @ApiProperty()
-    @IsInt()
-    id: number;
+    @IsString()
+    id: string;
 
     @ApiProperty()
     @IsString()

@@ -57,6 +57,7 @@ model ImprovingCompetence {
 }
 
 model CompetenceCharacteristic {
+  id           String  @id @default(uuid())
   scaleValue   Int     @db.SmallInt
   competenceId String  @unique
   courseId     String?

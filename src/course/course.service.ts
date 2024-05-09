@@ -1,31 +1,30 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course-request.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { Course } from './entities/course.entity';
 
 @Injectable()
 export class CourseService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createCourseDto: CreateCourseDto): Promise<Course> {
+  async create(createCourseDto: CreateCourseDto) {
     const createdCourse = await this.prisma.course.create({
       data: {
         ...createCourseDto
       },
       include: {
-        competencies: true,
+        improvingCompetencies: true,
         events: true,
         prerequisiteCompetencies: true
       }
     })
     return createdCourse;
   }
-
-  async findAll(): Promise<Course[]> {
+ 
+  async findAll() {
     const courses = await this.prisma.course.findMany({
       include: {
-        competencies: true,
+        improvingCompetencies: true,
         events: true,
         prerequisiteCompetencies: true
       }
@@ -33,13 +32,13 @@ export class CourseService {
     return courses;
   }
 
-  async findOne(id: string): Promise<Course> {
+  async findOne(id: string) {
     const course = await this.prisma.course.findFirst({
       where: {
         id
       },
       include: {
-        competencies: true,
+        improvingCompetencies: true,
         events: true,
         prerequisiteCompetencies: true
       }
