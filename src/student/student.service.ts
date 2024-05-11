@@ -65,6 +65,9 @@ export class StudentService {
         orderBy: {
           id: 'asc',
         },
+        include: {
+          courses: true
+        }
       });
     } else {
       studentsTotalAmount = await this.prisma.student.count();
@@ -74,6 +77,9 @@ export class StudentService {
         orderBy: {
           id: 'asc',
         },
+        include: {
+          courses: true
+        }
       });
     }
 
@@ -86,8 +92,13 @@ export class StudentService {
   }
 
   async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
-    const { firstName, lastName, middleName, birthDate } = updateStudentDto;
+    const { firstName, lastName, middleName, birthDate, courseId } = updateStudentDto;
     try {
+      const course = await this.prisma.course.findFirstOrThrow({
+        where: {
+          id: courseId
+        }
+      })
       const updatedStudent = await this.prisma.student.update({
         where: {
           id,
@@ -97,7 +108,15 @@ export class StudentService {
           middleName,
           lastName,
           birthDate,
+          courses:{
+            connect: {
+              id: course.id
+            }
+          }
         },
+        include: {
+          courses: true
+        }
       });
 
       return updatedStudent;

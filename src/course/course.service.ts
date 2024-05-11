@@ -2,15 +2,26 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course-request.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class CourseService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly jwtService: JwtService) {}
 
-  async create(createCourseDto: CreateCourseDto) {
+  async create(createCourseDto: CreateCourseDto, jwt: string) {
+
+    const decodedJwt = this.jwtService.decode(jwt);
+    
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email: decodedJwt.email
+      }
+    })
+    
     const createdCourse = await this.prisma.course.create({
       data: {
-        ...createCourseDto
+        ...createCourseDto,
+        creatorId: user.id
       },
       include: {
         improvingCompetencies: true,
@@ -23,6 +34,40 @@ export class CourseService {
  
   async findAll() {
     const courses = await this.prisma.course.findMany({
+      include: {
+        improvingCompetencies: true,
+        events: true,
+        prerequisiteCompetencies: true,
+        students: true
+      }
+    })
+    return courses;
+  }
+
+  async findAllForUser(jwt: string) {
+    const decodedJwt = this.jwtService.decode(jwt);
+    
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email: decodedJwt.email
+      }
+    })
+
+    const courses = await this.prisma.course.findMany({
+      where:{
+        OR: [
+          {
+            creatorId: user.id
+          },
+          {
+            students: {
+              some: {
+                userId: user.id
+              }
+            }
+          }
+        ]
+      },
       include: {
         improvingCompetencies: true,
         events: true,
@@ -51,8 +96,19 @@ export class CourseService {
     return course;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    return `This action updates a #${id} course`;
+  async update(id: string, updateCourseDto: UpdateCourseDto) {
+    const { name, startDate, endDate } = updateCourseDto;
+    const updateCourse = await this.prisma.course.update({
+      where: {
+        id,
+      },
+      data:{
+        name,
+        startDate,
+        endDate
+      }
+    })
+    return updateCourse;
   }
 
   remove(id: number) {

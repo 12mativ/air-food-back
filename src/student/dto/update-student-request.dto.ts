@@ -21,4 +21,9 @@ export class UpdateStudentRequestDto {
     @IsDateString()
     @IsOptional()
     birthDate?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    courseId?: string;
 }

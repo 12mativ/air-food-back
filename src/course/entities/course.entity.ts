@@ -21,6 +21,10 @@ export class Course {
     @ApiProperty()
     endDate: string;
     
+    @IsDateString()
+    @ApiProperty()
+    creatorId: string;
+    
     @ApiProperty()
     prerequisiteCompetencies: CompetenceCharacteristicForCourse[];
 

@@ -14,20 +14,22 @@ model User {
   roles    String[]
 
   student Student?
-  coach Coach?
+  coach   Coach?
+  courses Course[]
 }
 
 model Student {
-  id        String  @id @default(uuid())
-  email     String  @db.Text
-  firstName String? @db.Text
+  id         String  @id @default(uuid())
+  email      String  @db.Text
+  firstName  String? @db.Text
   middleName String? @db.Text
-  lastName  String? @db.Text
-  birthDate String? @db.Text
-  user      User    @relation(fields: [userId], references: [id])
+  lastName   String? @db.Text
+  birthDate  String? @db.Text
+  user       User    @relation(fields: [userId], references: [id])
 
   competences CompetenceCharacteristicForStudent[]
-  userId      String                     @unique
+  userId      String                               @unique
+  courses     Course[]
 }
 
 model Course {
@@ -35,18 +37,21 @@ model Course {
   name      String @db.Text
   startDate String @db.Text
   endDate   String @db.Text
+  creatorId String @db.Text
 
+  students                 Student[]
   prerequisiteCompetencies CompetenceCharacteristicForCourse[]
   improvingCompetencies    ImprovingCompetence[]
   events                   Event[]
+  creator                  User?                               @relation(fields: [creatorId], references: [id])
 }
 
 model Competence {
   id   String @id @default(uuid())
   name String @db.Text
 
-  improvingCompetence      ImprovingCompetence?
-  competenceCharacteristicForCourse CompetenceCharacteristicForCourse?
+  improvingCompetence                ImprovingCompetence?
+  competenceCharacteristicForCourse  CompetenceCharacteristicForCourse?
   competenceCharacteristicForStudent CompetenceCharacteristicForStudent?
 }
 
@@ -60,20 +65,20 @@ model ImprovingCompetence {
 }
 
 model CompetenceCharacteristicForStudent {
-  id           String  @id @default(uuid())
-  scaleValue   Int     @db.SmallInt
-  
+  id         String @id @default(uuid())
+  scaleValue Int    @db.SmallInt
+
   competenceId String  @unique
-  studentId  String?
+  studentId    String?
 
   student    Student?   @relation(fields: [studentId], references: [id])
   competence Competence @relation(fields: [competenceId], references: [id])
 }
 
 model CompetenceCharacteristicForCourse {
-  id           String  @id @default(uuid())
-  scaleValue   Int     @db.SmallInt
-  
+  id         String @id @default(uuid())
+  scaleValue Int    @db.SmallInt
+
   competenceId String  @unique
   courseId     String?
 
@@ -106,14 +111,14 @@ model Event {
 }
 
 model Coach {
-  id        String  @id @default(uuid())
-  email     String  @db.Text
-  firstName String? @db.Text
-  middleName   String? @db.Text
-  lastName  String? @db.Text
-  userId      String                     @unique
+  id         String  @id @default(uuid())
+  email      String  @db.Text
+  firstName  String? @db.Text
+  middleName String? @db.Text
+  lastName   String? @db.Text
+  userId     String  @unique
 
-  user      User    @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   events     Event[]
   simulators Simulator[]

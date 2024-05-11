@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Patch, Post, ValidationPipe } from '@nestjs/common';
 import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/role/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
@@ -15,14 +15,22 @@ export class CourseController {
   @Post()
   @ApiOkResponse({type: Course})
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  create(@Body(new ValidationPipe()) createCourseDto: CreateCourseDto) {
-    return this.courseService.create(createCourseDto);
+  create(@Headers('Authorization') auth: string, @Body(new ValidationPipe()) createCourseDto: CreateCourseDto) {
+    const jwt = auth.replace(/^Bearer\s/, "");
+    return this.courseService.create(createCourseDto, jwt);
   }
 
-  @Get()
+  @Get("/admin")
   @Roles(Role.ADMIN)
   findAll() {
     return this.courseService.findAll();
+  }
+
+  @Get()
+  @Roles(Role.COURSE_ORGANISER, Role.STUDENT, Role.COACH)
+  findAllForUser(@Headers('Authorization') auth: string) {
+    const jwt = auth.replace(/^Bearer\s/, "");
+    return this.courseService.findAllForUser(jwt);
   }
 
   @Get(':id')
@@ -34,7 +42,7 @@ export class CourseController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.courseService.update(+id, updateCourseDto);
+    return this.courseService.update(id, updateCourseDto);
   }
 
   @Delete(':id')
