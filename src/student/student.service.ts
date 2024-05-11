@@ -86,7 +86,7 @@ export class StudentService {
   }
 
   async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
-    const { firstName, lastName, birthDate } = updateStudentDto;
+    const { firstName, lastName, middleName, birthDate } = updateStudentDto;
     try {
       const updatedStudent = await this.prisma.student.update({
         where: {
@@ -94,6 +94,7 @@ export class StudentService {
         },
         data: {
           firstName,
+          middleName,
           lastName,
           birthDate,
         },

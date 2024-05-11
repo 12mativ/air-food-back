@@ -11,6 +11,11 @@ export class UpdateStudentRequestDto {
     @IsString()
     @IsOptional()
     lastName?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    middleName?: string;
     
     @ApiProperty()
     @IsDateString()
