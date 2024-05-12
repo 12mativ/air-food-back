@@ -10,7 +10,7 @@ export class ImprovingCompetenceController {
   constructor(private readonly improvingCompetenceService: ImprovingCompetenceService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createImprovingCompetenceDto: CreateImprovingCompetenceDto) {
+  create(@Body() createImprovingCompetenceDto: CreateImprovingCompetenceDto) {
     return this.improvingCompetenceService.create(createImprovingCompetenceDto);
   }
 

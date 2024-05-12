@@ -5,14 +5,4 @@ export class CreateCourseDto {
     @IsString()
     @ApiProperty()
     name: string;
-
-    @IsOptional()
-    @IsDateString()
-    @ApiProperty()
-    startDate: string;
-    
-    @IsOptional()
-    @IsDateString()
-    @ApiProperty()
-    endDate: string;
 }

@@ -94,11 +94,6 @@ export class StudentService {
   async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
     const { firstName, lastName, middleName, birthDate, courseId } = updateStudentDto;
     try {
-      const course = await this.prisma.course.findFirstOrThrow({
-        where: {
-          id: courseId
-        }
-      })
       const updatedStudent = await this.prisma.student.update({
         where: {
           id,
@@ -110,7 +105,7 @@ export class StudentService {
           birthDate,
           courses:{
             connect: {
-              id: course.id
+              id: courseId
             }
           }
         },

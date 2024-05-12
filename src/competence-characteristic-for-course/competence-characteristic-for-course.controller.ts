@@ -10,7 +10,7 @@ export class CompetenceCharacteristicForCourseController {
   constructor(private readonly competenceCharacteristicForCourseService: CompetenceCharacteristicForCourseService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createCompetenceCharacteristicForCourseDto: CreateCompetenceCharacteristicForCourseDto) {
+  create(@Body() createCompetenceCharacteristicForCourseDto: CreateCompetenceCharacteristicForCourseDto) {
     return this.competenceCharacteristicForCourseService.create(createCompetenceCharacteristicForCourseDto);
   }
 

@@ -10,7 +10,7 @@ export class CompetenceCharacteristicForStudentController {
   constructor(private readonly competenceCharacteristicForStudentService: CompetenceCharacteristicForStudentService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createCompetenceCharacteristicForStudentDto: CreateCompetenceCharacteristicForStudentDto) {
+  create(@Body() createCompetenceCharacteristicForStudentDto: CreateCompetenceCharacteristicForStudentDto) {
     return this.competenceCharacteristicForStudentService.create(createCompetenceCharacteristicForStudentDto);
   }
 

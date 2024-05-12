@@ -20,14 +20,14 @@ export class AuthController {
   @Post('login')
   @ApiOkResponse({type: LoginResponseDto})
   @Public()
-  login(@Body(new ValidationPipe()) loginDto: LoginRequestDto): Promise<LoginResponseDto> {
+  login(@Body() loginDto: LoginRequestDto): Promise<LoginResponseDto> {
     return this.authService.login(loginDto);
   }
 
   @Post('register')
   @ApiOkResponse({type: RegisterResponseDto})
   @Public()
-  register(@Body(new ValidationPipe()) registerDto: RegisterRequestDto): Promise<RegisterResponseDto> {
+  register(@Body() registerDto: RegisterRequestDto): Promise<RegisterResponseDto> {
     return this.authService.register(registerDto);
   }
 }

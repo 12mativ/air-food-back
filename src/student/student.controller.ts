@@ -39,7 +39,7 @@ export class StudentController {
   @Patch(':id')
   updateStudent(
     @Param('id') id: string,
-    @Body(new ValidationPipe()) updateStudentDto: UpdateStudentRequestDto,
+    @Body() updateStudentDto: UpdateStudentRequestDto,
   ) {
     return this.studentService.updateStudent(id, updateStudentDto);
   }

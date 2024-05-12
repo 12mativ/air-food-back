@@ -21,6 +21,8 @@ export class CourseService {
     const createdCourse = await this.prisma.course.create({
       data: {
         ...createCourseDto,
+        startDate: null,
+        endDate: null,
         creatorId: user.id
       },
       include: {
@@ -97,15 +99,13 @@ export class CourseService {
   }
 
   async update(id: string, updateCourseDto: UpdateCourseDto) {
-    const { name, startDate, endDate } = updateCourseDto;
+    const { name } = updateCourseDto;
     const updateCourse = await this.prisma.course.update({
       where: {
         id,
       },
       data:{
-        name,
-        startDate,
-        endDate
+        name
       }
     })
     return updateCourse;

@@ -15,7 +15,7 @@ export class CourseController {
   @Post()
   @ApiOkResponse({type: Course})
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  create(@Headers('Authorization') auth: string, @Body(new ValidationPipe()) createCourseDto: CreateCourseDto) {
+  create(@Headers('Authorization') auth: string, @Body() createCourseDto: CreateCourseDto) {
     const jwt = auth.replace(/^Bearer\s/, "");
     return this.courseService.create(createCourseDto, jwt);
   }

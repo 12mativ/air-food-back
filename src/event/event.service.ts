@@ -13,7 +13,42 @@ export class EventService {
         name: createEventDto.name,
         startDate: createEventDto.startDate,
         endDate: createEventDto.endDate,
-        courseId: createEventDto.courseId
+        courseId: createEventDto.courseId,
+      }
+    })
+    const course = await this.prisma.course.findFirst({
+      where: {
+        id: createEventDto.courseId
+      }
+    })
+
+    const dates = {startDate: null, endDate: null}
+    if(course.startDate == null && course.endDate == null){
+      dates.startDate = createEventDto.startDate
+      dates.endDate = createEventDto.endDate
+    }
+    else{
+      if (new Date(createEventDto.startDate) < new Date(course.startDate)) {
+        dates.startDate = createEventDto.startDate
+      }
+      else{
+        dates.startDate = course.startDate
+      }
+      if (new Date(createEventDto.endDate) > new Date(course.endDate)) {
+        dates.endDate = createEventDto.endDate
+      }
+      else{
+        dates.endDate = course.endDate
+      }
+    }
+    console.log(dates)
+    await this.prisma.course.update({
+      where: {
+        id: createEventDto.courseId
+      },
+      data: {
+        startDate: dates.startDate,
+        endDate: dates.endDate
       }
     })
     return createdEvent;

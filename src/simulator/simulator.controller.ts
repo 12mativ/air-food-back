@@ -10,7 +10,7 @@ export class SimulatorController {
   constructor(private readonly simulatorService: SimulatorService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createSimulatorDto: CreateSimulatorDto) {
+  create(@Body() createSimulatorDto: CreateSimulatorDto) {
     return this.simulatorService.create(createSimulatorDto);
   }
 

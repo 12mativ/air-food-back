@@ -10,7 +10,7 @@ export class CompetenceController {
   constructor(private readonly competenceService: CompetenceService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createCompetenceDto: CreateCompetenceDto) {
+  create(@Body() createCompetenceDto: CreateCompetenceDto) {
     return this.competenceService.create(createCompetenceDto);
   }
 
