@@ -23,4 +23,9 @@ export class UpdateEventDto extends PartialType(CreateEventDto) {
     @IsString()
     @IsOptional()
     coachId?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    simulatorId?: string;
 }

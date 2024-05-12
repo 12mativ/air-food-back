@@ -18,6 +18,7 @@ export class EventController {
   }
 
   @Get()
+  @Roles(Role.ADMIN)
   findAll() {
     return this.eventService.findAll();
   }
@@ -28,6 +29,7 @@ export class EventController {
   }
 
   @Patch(':id')
+  @Roles(Role.ADMIN,Role.COURSE_ORGANISER)
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
     return this.eventService.update(id, updateEventDto);
   }

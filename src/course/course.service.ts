@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course-request.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { JwtService } from '@nestjs/jwt';
+import { Role } from 'src/role/role.enum';
 
 @Injectable()
 export class CourseService {
@@ -55,6 +56,7 @@ export class CourseService {
       }
     })
 
+
     const courses = await this.prisma.course.findMany({
       where:{
         OR: [
@@ -73,7 +75,8 @@ export class CourseService {
       include: {
         improvingCompetencies: true,
         events: true,
-        prerequisiteCompetencies: true
+        prerequisiteCompetencies: true,
+        students: user.roles.includes(Role.COURSE_ORGANISER) ? true : false
       }
     })
     return courses;

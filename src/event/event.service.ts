@@ -69,8 +69,9 @@ export class EventService {
   }
 
   async update(id: string, updateEventDto: UpdateEventDto) {
-    const { name, startDate, endDate, coachId } = updateEventDto;
+    const { name, startDate, endDate, coachId, simulatorId } = updateEventDto;
     const coaches = coachId ? {connect: {id: coachId}} : {}
+    const simulators = simulatorId ? {connect: {id: simulatorId}} : {}
     const updatedEvent = await this.prisma.event.update({
       where: {
         id: id
@@ -79,10 +80,12 @@ export class EventService {
         name,
         startDate,
         endDate,
-        coaches: coaches
+        coaches: coaches,
+        simulators: simulators
       },
       include: {
-        coaches: true
+        coaches: true,
+        simulators: true
       }
     })
 
