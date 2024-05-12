@@ -33,11 +33,11 @@ model Student {
 }
 
 model Course {
-  id        String @id @default(uuid())
-  name      String @db.Text
-  startDate String @db.Text
-  endDate   String @db.Text
-  creatorId String @db.Text
+  id        String  @id @default(uuid())
+  name      String  @db.Text
+  startDate String? @db.Text
+  endDate   String? @db.Text
+  creatorId String  @db.Text
 
   students                 Student[]
   prerequisiteCompetencies CompetenceCharacteristicForCourse[]
