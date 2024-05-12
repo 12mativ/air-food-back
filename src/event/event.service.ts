@@ -69,16 +69,24 @@ export class EventService {
   }
 
   async update(id: string, updateEventDto: UpdateEventDto) {
-    // const updatedEvent = await this.prisma.event.update({
-    //   where: {
+    const { name, startDate, endDate, coachId } = updateEventDto;
+    const coaches = coachId ? {connect: {id: coachId}} : {}
+    const updatedEvent = await this.prisma.event.update({
+      where: {
+        id: id
+      },
+      data: {
+        name,
+        startDate,
+        endDate,
+        coaches: coaches
+      },
+      include: {
+        coaches: true
+      }
+    })
 
-    //   }
-    //   data: {
-
-    //   }
-    // })
-
-    return `This action updates a #${id} event`;
+    return updatedEvent;
   }
 
   remove(id: string) {

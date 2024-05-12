@@ -8,7 +8,11 @@ export class CoachService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    const coaches = await this.prisma.coach.findMany();
+    const coaches = await this.prisma.coach.findMany({
+      include: {
+        events: true
+      }
+    });
     return coaches;
   }
 
