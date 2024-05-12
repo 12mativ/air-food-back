@@ -41,7 +41,7 @@ export class EventService {
         dates.endDate = course.endDate
       }
     }
-    console.log(dates)
+
     await this.prisma.course.update({
       where: {
         id: createEventDto.courseId

@@ -39,7 +39,12 @@ export class CourseService {
     const courses = await this.prisma.course.findMany({
       include: {
         improvingCompetencies: true,
-        events: true,
+        events: {
+          include: {
+            coaches: true,
+            simulators: true
+          }
+        },
         prerequisiteCompetencies: true,
         students: true
       }
