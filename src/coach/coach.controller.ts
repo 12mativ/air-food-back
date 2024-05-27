@@ -23,9 +23,4 @@ export class CoachController {
   update(@Param('id') id: string, @Body() updateCoachDto: UpdateCoachDto) {
     return this.coachService.update(id, updateCoachDto);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coachService.remove(+id);
-  }
 }
