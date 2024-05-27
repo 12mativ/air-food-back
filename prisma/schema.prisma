@@ -86,16 +86,6 @@ model CompetenceCharacteristicForCourse {
   competence Competence @relation(fields: [competenceId], references: [id])
 }
 
-// model CompetenciesOnCourses {
-//   courseId     String
-//   competenceId String
-
-//   course       Course              @relation(fields: [courseId], references: [id])
-//   competence   ImprovingCompetence @relation(fields: [competenceId], references: [id])
-
-//   @@id([courseId, competenceId])
-// }
-
 model Event {
   id        String @id @default(uuid())
   name      String @db.Text
@@ -124,16 +114,6 @@ model Coach {
   simulators Simulator[]
 }
 
-// model CoachesOnEvents {
-//   coachId String
-//   eventId String
-
-//   coach   Coach  @relation(fields: [coachId], references: [id])
-//   event   Event  @relation(fields: [eventId], references: [id])
-
-//   @@id([coachId, eventId])
-// }
-
 model Simulator {
   id   String @id @default(uuid())
   name String @db.Text
@@ -141,23 +121,3 @@ model Simulator {
   events  Event[]
   coaches Coach[]
 }
-
-// model CoachesOnSimulators {
-//   coachId     String
-//   simulatorId String
-
-//   coach       Coach     @relation(fields: [coachId], references: [id])
-//   simulator   Simulator @relation(fields: [simulatorId], references: [id])
-
-//   @@id([coachId, simulatorId])
-// }
-
-// model SimulatorsOnEvents {
-//   simulatorId String
-//   eventId     String
-
-//   simulator   Simulator @relation(fields: [simulatorId], references: [id])
-//   event       Event     @relation(fields: [eventId], references: [id])
-
-//   @@id([simulatorId, eventId])
-// }
