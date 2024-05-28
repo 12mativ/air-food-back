@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,17 +8,22 @@ export class EventService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createEventDto: CreateEventDto) {
+    const course = await this.prisma.course.findFirst({
+      where: {
+        id: createEventDto.courseId
+      }
+    })
+
+    if(!course){
+      throw new BadRequestException('Курса с таким id не существует')
+    }
+
     const createdEvent = await this.prisma.event.create({
       data: {
         name: createEventDto.name,
         startDate: createEventDto.startDate,
         endDate: createEventDto.endDate,
         courseId: createEventDto.courseId,
-      }
-    })
-    const course = await this.prisma.course.findFirst({
-      where: {
-        id: createEventDto.courseId
       }
     })
 
@@ -72,6 +77,10 @@ export class EventService {
     const { name, startDate, endDate, coachId, simulatorId } = updateEventDto;
     const coaches = coachId ? {connect: {id: coachId}} : {}
     const simulators = simulatorId ? {connect: {id: simulatorId}} : {}
+    const currentCoach = await this.prisma.coach.findFirst({where: {id: coachId}})
+    if(!currentCoach){
+      throw new BadRequestException("Тренера с таким id не существует")
+    }
     const updatedEvent = await this.prisma.event.update({
       where: {
         id: id
