@@ -78,8 +78,12 @@ export class EventService {
     const coaches = coachId ? {connect: {id: coachId}} : {}
     const simulators = simulatorId ? {connect: {id: simulatorId}} : {}
     const currentCoach = await this.prisma.coach.findFirst({where: {id: coachId}})
+    const currentSimulator = await this.prisma.simulator.findFirst({where: {id: simulatorId}})
     if(!currentCoach){
       throw new BadRequestException("Тренера с таким id не существует")
+    }
+    if(!currentSimulator){
+      throw new BadRequestException("Тренажера с таким id не существует")
     }
     const updatedEvent = await this.prisma.event.update({
       where: {

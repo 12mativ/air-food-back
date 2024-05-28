@@ -51,7 +51,7 @@ export class SimulatorService {
   }
 
   async update(id: string, updateSimulatorDto: UpdateSimulatorDto) {
-    const { name } = UpdateSimulatorDto;
+    const { name } = updateSimulatorDto;
     try {
       const updatedSimulator = await this.prisma.simulator.update({
         where: {

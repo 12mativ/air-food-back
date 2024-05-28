@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCoachDto } from './dto/create-coach.dto';
 import { UpdateCoachDto } from './dto/update-coach.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -98,7 +98,12 @@ export class CoachService {
   }
 
   async update(id: string, updateCoachDto: UpdateCoachDto) {
-    const {firstName, lastName, middleName} = updateCoachDto
+    const {firstName, lastName, middleName, simulatorId} = updateCoachDto
+    const simulators = simulatorId ? {connect: {id: simulatorId}} : {}
+    const currentSimulator = await this.prisma.simulator.findFirst({where: {id: simulatorId}})
+    if(!currentSimulator){
+      throw new BadRequestException("Тренажера с таким id не существует")
+    }
     const updatedCoach = await this.prisma.coach.update({
       where: {
         id
@@ -106,7 +111,11 @@ export class CoachService {
       data: { 
         firstName, 
         lastName, 
-        middleName
+        middleName,
+        simulators:simulators
+      },
+      include: {
+        simulators: true
       }
     })
     return updatedCoach;
