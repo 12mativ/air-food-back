@@ -9,8 +9,8 @@ import { CoachModule } from './coach/coach.module';
 import { SimulatorModule } from './simulator/simulator.module';
 import { EventModule } from './event/event.module';
 import { ImprovingCompetenceModule } from './improving-competence/improving-competence.module';
-import { CompetenceCharacteristicForStudentModule } from './competence-characteristic-for-student/competence-characteristic-for-student.module';
-import { CompetenceCharacteristicForCourseModule } from './competence-characteristic-for-course/competence-characteristic-for-course.module';
+import { StudentCompetenceCharacteristicModule } from './student-competence-characteristic/student-competence-characteristic.module';
+import { CourseCompetenceCharacteristicModule } from './course-competence-characteristic/course-competence-characteristic.module';
 
 @Module({
   imports: [
@@ -24,8 +24,9 @@ import { CompetenceCharacteristicForCourseModule } from './competence-characteri
     SimulatorModule,
     EventModule,
     ImprovingCompetenceModule,
-    CompetenceCharacteristicForStudentModule,
-    CompetenceCharacteristicForCourseModule,
+    StudentCompetenceCharacteristicModule,
+    StudentCompetenceCharacteristicModule,
+    CourseCompetenceCharacteristicModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],

@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsString } from "class-validator";
+import { IsInt, IsPositive, IsString } from "class-validator";
 
-export class CreateCompetenceCharacteristicForCourseDto {
+export class ResGetCourseCompetenceCharacteristicDto {
     @ApiProperty()
+    @IsPositive()
     @IsInt()
     scaleValue: number;
 

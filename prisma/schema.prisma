@@ -25,9 +25,9 @@ model Student {
   middleName String? @db.Text
   lastName   String? @db.Text
   birthDate  String? @db.Text
-  user       User    @relation(fields: [userId], references: [id])
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  competences CompetenceCharacteristicForStudent[]
+  competences StudentCompetenceCharacteristic[]
   userId      String                               @unique
   courses     Course[]
 }
@@ -40,10 +40,10 @@ model Course {
   creatorId String @db.Text
 
   students                 Student[]
-  prerequisiteCompetencies CompetenceCharacteristicForCourse[]
+  prerequisiteCompetencies CourseCompetenceCharacteristic[]
   improvingCompetencies    ImprovingCompetence[]
   events                   Event[]
-  creator                  User?                               @relation(fields: [creatorId], references: [id])
+  creator                  User?                               @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 }
 
 model Competence {
@@ -51,8 +51,8 @@ model Competence {
   name String @db.Text
 
   improvingCompetence                ImprovingCompetence?
-  competenceCharacteristicForCourse  CompetenceCharacteristicForCourse?
-  competenceCharacteristicForStudent CompetenceCharacteristicForStudent?
+  competenceCharacteristicForCourse  CourseCompetenceCharacteristic?
+  competenceCharacteristicForStudent StudentCompetenceCharacteristic?
 }
 
 model ImprovingCompetence {
@@ -61,29 +61,29 @@ model ImprovingCompetence {
   competenceId   String @unique
 
   courses    Course[]
-  competence Competence @relation(fields: [competenceId], references: [id])
+  competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)
 }
 
-model CompetenceCharacteristicForStudent {
+model StudentCompetenceCharacteristic {
   id         String @id @default(uuid())
   scaleValue Int    @db.SmallInt
 
   competenceId String  @unique
   studentId    String?
 
-  student    Student?   @relation(fields: [studentId], references: [id])
-  competence Competence @relation(fields: [competenceId], references: [id])
+  student    Student?   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)
 }
 
-model CompetenceCharacteristicForCourse {
+model CourseCompetenceCharacteristic {
   id         String @id @default(uuid())
   scaleValue Int    @db.SmallInt
 
   competenceId String  @unique
   courseId     String?
 
-  course     Course?    @relation(fields: [courseId], references: [id])
-  competence Competence @relation(fields: [competenceId], references: [id])
+  course     Course?    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)
 }
 
 model Event {
@@ -95,7 +95,7 @@ model Event {
 
   prerequisiteEvents Event[]     @relation("EventPrerequisiteEvents")
   eventsRelation     Event[]     @relation("EventPrerequisiteEvents")
-  course             Course      @relation(fields: [courseId], references: [id])
+  course             Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
   coaches            Coach[]
   simulators         Simulator[]
 }
@@ -108,7 +108,7 @@ model Coach {
   lastName   String? @db.Text
   userId     String  @unique
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   events     Event[]
   simulators Simulator[]

@@ -1,36 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post
+} from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Role } from 'src/role/role.enum';
+import { Roles } from 'src/roles/roles.decorator';
 import { CompetenceService } from './competence.service';
-import { CreateCompetenceDto } from './dto/create-competence.dto';
-import { UpdateCompetenceDto } from './dto/update-competence.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { CreateCompetenceDto } from './dto/create-competence-request.dto';
+import { GetCompetenceResponseDto } from './dto/get-competence-response.dto';
 
-@ApiTags("Competence")
+@ApiTags('Competence')
 @Controller('competence')
 export class CompetenceController {
   constructor(private readonly competenceService: CompetenceService) {}
 
   @Post()
+  @ApiOkResponse({
+    type: GetCompetenceResponseDto,
+  })
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   create(@Body() createCompetenceDto: CreateCompetenceDto) {
     return this.competenceService.create(createCompetenceDto);
   }
 
   @Get()
+  @ApiOkResponse({
+    type: GetCompetenceResponseDto,
+    isArray: true
+  })
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   findAll() {
     return this.competenceService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.competenceService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompetenceDto: UpdateCompetenceDto) {
-    return this.competenceService.update(+id, updateCompetenceDto);
-  }
-
   @Delete(':id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   remove(@Param('id') id: string) {
-    return this.competenceService.remove(+id);
+    return this.competenceService.remove(id);
   }
 }

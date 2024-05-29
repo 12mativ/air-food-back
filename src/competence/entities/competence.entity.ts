@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CompetenceCharacteristicForCourse, CompetenceCharacteristicForStudent } from "@prisma/client";
+import { CourseCompetenceCharacteristic, StudentCompetenceCharacteristic } from "@prisma/client";
 import { IsOptional, IsString } from "class-validator";
 import { ImprovingCompetence } from "src/improving-competence/entities/improving-competence.entity";
 
@@ -18,9 +18,9 @@ export class Competence {
 
     @ApiProperty()
     @IsOptional()
-    competenceCharacteristicForStudent?: CompetenceCharacteristicForStudent;
+    competenceCharacteristicForStudent?: StudentCompetenceCharacteristic;
 
     @ApiProperty()
     @IsOptional()
-    competenceCharacteristicForCourse?: CompetenceCharacteristicForCourse;
+    competenceCharacteristicForCourse?: CourseCompetenceCharacteristic;
 }

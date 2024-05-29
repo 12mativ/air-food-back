@@ -66,7 +66,12 @@ export class StudentService {
           id: 'asc',
         },
         include: {
-          courses: true
+          courses: true,
+          competences: {
+            include: {
+              competence: true
+            }
+          }
         }
       });
     } else {
@@ -78,7 +83,12 @@ export class StudentService {
           id: 'asc',
         },
         include: {
-          courses: true
+          courses: true,
+          competences: {
+            include: {
+              competence: true
+            }
+          }
         }
       });
     }

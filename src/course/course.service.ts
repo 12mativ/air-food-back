@@ -45,7 +45,11 @@ export class CourseService {
             simulators: true
           }
         },
-        prerequisiteCompetencies: true,
+        prerequisiteCompetencies: {
+          include: {
+            competence: true
+          }
+        },
         students: true
       }
     })
