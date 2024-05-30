@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCompetenceDto } from './dto/create-competence-request.dto';
+import { ReqCreateCompetenceDto } from './dto/req-create-competence.dto';
 
 @Injectable()
 export class CompetenceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createCompetenceDto: CreateCompetenceDto) {
+  async create(createCompetenceDto: ReqCreateCompetenceDto) {
     const createdCompetence = await this.prisma.competence.create({
       data: {
         name: createCompetenceDto.name,

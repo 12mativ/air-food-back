@@ -1,17 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/role/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
 import { CompetenceService } from './competence.service';
-import { CreateCompetenceDto } from './dto/create-competence-request.dto';
-import { GetCompetenceResponseDto } from './dto/get-competence-response.dto';
+import { ReqCreateCompetenceDto } from './dto/req-create-competence.dto';
+import { ResGetCompetenceDto } from './dto/res-get-competence.dto';
 
 @ApiTags('Competence')
 @Controller('competence')
@@ -20,17 +13,17 @@ export class CompetenceController {
 
   @Post()
   @ApiOkResponse({
-    type: GetCompetenceResponseDto,
+    type: ResGetCompetenceDto,
   })
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  create(@Body() createCompetenceDto: CreateCompetenceDto) {
+  create(@Body() createCompetenceDto: ReqCreateCompetenceDto) {
     return this.competenceService.create(createCompetenceDto);
   }
 
   @Get()
   @ApiOkResponse({
-    type: GetCompetenceResponseDto,
-    isArray: true
+    type: ResGetCompetenceDto,
+    isArray: true,
   })
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   findAll() {

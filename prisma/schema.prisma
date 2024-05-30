@@ -58,9 +58,11 @@ model Competence {
 model ImprovingCompetence {
   id             String @id @default(uuid())
   improvingValue Int    @default(0) @db.SmallInt
+  
   competenceId   String @unique
+  courseId     String
 
-  courses    Course[]
+  course     Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)
 }
 

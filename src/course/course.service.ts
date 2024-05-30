@@ -38,7 +38,11 @@ export class CourseService {
   async findAll() {
     const courses = await this.prisma.course.findMany({
       include: {
-        improvingCompetencies: true,
+        improvingCompetencies: {
+          include: {
+            competence: true
+          }
+        },
         events: {
           include: {
             coaches: true,

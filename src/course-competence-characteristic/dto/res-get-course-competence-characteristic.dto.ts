@@ -1,7 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsPositive, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsInt, IsObject, IsPositive, IsString } from "class-validator";
+import { ResGetCompetenceDto } from "src/competence/dto/res-get-competence.dto";
 
 export class ResGetCourseCompetenceCharacteristicDto {
+    @ApiProperty()
+    @IsString()
+    id: string;
+    
     @ApiProperty()
     @IsPositive()
     @IsInt()
@@ -14,4 +20,9 @@ export class ResGetCourseCompetenceCharacteristicDto {
     @ApiProperty()
     @IsString()
     courseId: string;
+
+    @ApiProperty()
+    @IsObject()
+    @Type(() => ResGetCompetenceDto)
+    competence: ResGetCompetenceDto;
 }

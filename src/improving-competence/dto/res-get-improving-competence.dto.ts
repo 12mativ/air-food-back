@@ -1,17 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Competence } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsInt, IsObject, IsPositive, IsString } from 'class-validator';
+import { IsInt, IsObject, IsPositive, IsString, ValidateNested } from 'class-validator';
 import { ResGetCompetenceDto } from 'src/competence/dto/res-get-competence.dto';
 
-export class ResGetStudentCompetenceCharacteristicDto {
+export class ResGetImprovingCompetenceDto {
   @ApiProperty()
   @IsString()
-  id: string;
+  id: string
   
   @ApiProperty()
-  @IsPositive()
   @IsInt()
-  scaleValue: number;
+  @IsPositive()
+  improvingValue: number;
 
   @ApiProperty()
   @IsString()
@@ -19,10 +20,10 @@ export class ResGetStudentCompetenceCharacteristicDto {
 
   @ApiProperty()
   @IsString()
-  studentId: string;
+  courseId: string;
 
   @ApiProperty()
   @IsObject()
   @Type(() => ResGetCompetenceDto)
-  competence: ResGetCompetenceDto;
+  competence: ResGetCompetenceDto
 }

@@ -1,35 +1,52 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ImprovingCompetenceService } from './improving-competence.service';
-import { CreateImprovingCompetenceDto } from './dto/create-improving-competence.dto';
-import { UpdateImprovingCompetenceDto } from './dto/update-improving-competence.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ReqCreateImprovingCompetenceDto } from './dto/req-create-improving-competence.dto';
+import { ReqUpdateImprovingCompetenceDto } from './dto/req-update-improving-competence.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/role/role.enum';
+import { ResGetImprovingCompetenceDto } from './dto/res-get-improving-competence.dto';
 
-@ApiTags("ImprovingСompetence")
+@ApiTags('ImprovingСompetence')
 @Controller('improving-competence')
 export class ImprovingCompetenceController {
-  constructor(private readonly improvingCompetenceService: ImprovingCompetenceService) {}
+  constructor(
+    private readonly improvingCompetenceService: ImprovingCompetenceService,
+  ) {}
 
   @Post()
-  create(@Body() createImprovingCompetenceDto: CreateImprovingCompetenceDto) {
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  @ApiOkResponse({type: ResGetImprovingCompetenceDto})
+  create(
+    @Body() createImprovingCompetenceDto: ReqCreateImprovingCompetenceDto,
+  ) {
     return this.improvingCompetenceService.create(createImprovingCompetenceDto);
   }
 
-  @Get()
-  findAll() {
-    return this.improvingCompetenceService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.improvingCompetenceService.findOne(id);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateImprovingCompetenceDto: UpdateImprovingCompetenceDto) {
-    return this.improvingCompetenceService.update(id, updateImprovingCompetenceDto);
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  @ApiOkResponse({type: ResGetImprovingCompetenceDto})
+  update(
+    @Param('id') id: string,
+    @Body() updateImprovingCompetenceDto: ReqUpdateImprovingCompetenceDto,
+  ) {
+    return this.improvingCompetenceService.update(
+      id,
+      updateImprovingCompetenceDto,
+    );
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   remove(@Param('id') id: string) {
     return this.improvingCompetenceService.remove(id);
   }
