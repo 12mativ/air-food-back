@@ -125,18 +125,16 @@ export class CourseService {
 
   async remove(id: string) {
     const course = await this.prisma.course.findUnique({
-        where: { id },
+      where: { id },
     });
 
     if (!course) {
-        throw new BadRequestException('Course with the given id does not exist');
+      throw new BadRequestException('Курс с таким id не существует');
     }
 
     await this.prisma.course.delete({
-        where: { id },
+      where: { id },
     });
-
-    return { message: 'Course successfully deleted' };
 }
 
 }
