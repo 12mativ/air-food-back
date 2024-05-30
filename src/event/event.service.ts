@@ -105,7 +105,18 @@ export class EventService {
     return updatedEvent;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} event`;
+  async remove(id: string) {
+    const event = await this.prisma.event.findUnique({
+      where: {id},
+    });
+
+    if (!event) { 
+      throw new BadRequestException ('Ошибка №400, неверный запрос');
+    }
+
+    await this.prisma.event.delete ({
+      where: {id},
+    });
   }
+
 }
