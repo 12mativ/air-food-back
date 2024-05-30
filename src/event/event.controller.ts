@@ -5,6 +5,7 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/role/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
+import { UpdateEventDeleteCoachDto } from './dto/update-event-delete-coach.dto';
 
 @ApiTags("Event")
 @Controller('event')
@@ -32,6 +33,12 @@ export class EventController {
   @Roles(Role.ADMIN,Role.COURSE_ORGANISER)
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
     return this.eventService.update(id, updateEventDto);
+  }
+
+  @Patch('/delete-coach/:id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  disconnectCoach(@Param('id') id: string, @Body() updateEventDeleteCoachDto: UpdateEventDeleteCoachDto) {
+    return this.eventService.disconnectCoach(id, updateEventDeleteCoachDto);
   }
 
   @Delete(':id')
