@@ -123,7 +123,20 @@ export class CourseService {
     return updateCourse;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
-  }
+  async remove(id: string) {
+    const course = await this.prisma.course.findUnique({
+        where: { id },
+    });
+
+    if (!course) {
+        throw new BadRequestException('Course with the given id does not exist');
+    }
+
+    await this.prisma.course.delete({
+        where: { id },
+    });
+
+    return { message: 'Course successfully deleted' };
+}
+
 }
