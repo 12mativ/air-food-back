@@ -4,6 +4,7 @@ import { CreateCourseDto } from './dto/create-course-request.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from 'src/role/role.enum';
+import { UpdateCourseDeleteStudentDto } from './dto/update-course-delete-student.dto';
 
 @Injectable()
 export class CourseService {
@@ -102,14 +103,56 @@ export class CourseService {
   }
 
   async update(id: string, updateCourseDto: UpdateCourseDto) {
-    const { name } = updateCourseDto;
+    const { name, idStudent } = updateCourseDto;
+    const students = idStudent ? {connect: {id: idStudent}} : {}
+
     const updateCourse = await this.prisma.course.update({
       where: {
         id,
       },
       data:{
-        name
+        name,
+        students,
       }
+    })
+    return updateCourse;
+  }
+
+  async disconnectStudent(id: string, updateCourseDeleteStudentDto: UpdateCourseDeleteStudentDto) {
+    const currentCourse = await this.prisma.course.findFirst({
+      where: {
+        id,
+      },
+    })
+    if (!currentCourse){
+      throw new BadRequestException("Курса с таким id не существует")
+    }
+
+    const currentStudentOnCourse = await this.prisma.course.findFirst({
+      where: {
+        id,
+        students: {
+          some: {
+            id: updateCourseDeleteStudentDto.idStudent,
+          },
+        },
+      },
+    })
+    if (!currentStudentOnCourse){
+      throw new BadRequestException("Студента с таким id на курсе не существует")
+    }
+
+    const updateCourse = await this.prisma.course.update({
+      where: {
+        id: id,
+      },
+      data:{
+        students: {
+          disconnect: {
+            id: updateCourseDeleteStudentDto.idStudent,
+          },
+        },
+      },
     })
     return updateCourse;
   }

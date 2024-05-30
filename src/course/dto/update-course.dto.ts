@@ -7,4 +7,9 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     @IsString()
     @IsOptional()
     name?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    idStudent?: string;
 }

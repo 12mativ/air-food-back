@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateEventDeleteCoachDto } from './dto/update-event-delete-coach.dto';
 
 @Injectable()
 export class EventService {
@@ -92,6 +93,46 @@ export class EventService {
     return updatedEvent;
   }
 
+  
+  async disconnectCoach(id: string, updateEventDeleteCoachDto: UpdateEventDeleteCoachDto) {
+    const currentEvent = await this.prisma.event.findFirst({
+      where: {
+        id,
+      },
+    })
+    if (!currentEvent){
+      throw new BadRequestException("События с таким id не существует")
+    }
+
+    const currentCoachOnEvent = await this.prisma.event.findFirst({
+      where: {
+        id,
+        coaches: {
+          some: {
+            id: updateEventDeleteCoachDto.idCoach,
+          },
+        },
+      },
+    })
+    if (!currentCoachOnEvent){
+      throw new BadRequestException("Тренера с таким id на событии не существует")
+    }
+
+    const updateCourse = await this.prisma.event.update({
+      where: {
+        id: id,
+      },
+      data:{
+        coaches: {
+          disconnect: {
+            id: updateEventDeleteCoachDto.idCoach,
+          },
+        },
+      },
+    })
+    return updateCourse;
+  }
+  
   remove(id: string) {
     return `This action removes a #${id} event`;
   }
