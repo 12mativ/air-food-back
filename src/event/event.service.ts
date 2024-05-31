@@ -105,8 +105,6 @@ export class EventService {
 
     return updatedEvent;
   }
-
-  
   async disconnectCoach(id: string, updateEventDeleteCoachDto: UpdateEventDeleteCoachDto) {
     const currentEvent = await this.prisma.event.findFirst({
       where: {
@@ -145,8 +143,17 @@ export class EventService {
     })
     return updateCourse;
   }
-  
-  remove(id: string) {
-    return `This action removes a #${id} event`;
+  async remove(id: string) {
+    const event = await this.prisma.event.findFirst({
+      where: {id},
+    });
+
+    if (!event) { 
+      throw new BadRequestException('Мероприятия с таким id не существует');
+    }
+
+    await this.prisma.event.delete({
+      where: {id},
+    });
   }
 }
