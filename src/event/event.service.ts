@@ -106,15 +106,15 @@ export class EventService {
   }
 
   async remove(id: string) {
-    const event = await this.prisma.event.findUnique({
+    const event = await this.prisma.event.findFirst({
       where: {id},
     });
 
     if (!event) { 
-      throw new BadRequestException ('Ошибка №400, неверный запрос');
+      throw new BadRequestException('Мероприятия с таким id не существует');
     }
 
-    await this.prisma.event.delete ({
+    await this.prisma.event.delete({
       where: {id},
     });
   }
