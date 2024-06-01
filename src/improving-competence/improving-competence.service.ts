@@ -1,41 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { CreateImprovingCompetenceDto } from './dto/create-improving-competence.dto';
-import { UpdateImprovingCompetenceDto } from './dto/update-improving-competence.dto';
+import { ReqCreateImprovingCompetenceDto } from './dto/req-create-improving-competence.dto';
+import { ReqUpdateImprovingCompetenceDto } from './dto/req-update-improving-competence.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ImprovingCompetenceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createImprovingCompetenceDto: CreateImprovingCompetenceDto) {
-    const createdImprovingCompetence = await this.prisma.improvingCompetence.create({
-      data: {
-        improvingValue: createImprovingCompetenceDto.improvingValue,
-        competenceId: createImprovingCompetenceDto.competenceId
-      }
-    })
+  async create(createImprovingCompetenceDto: ReqCreateImprovingCompetenceDto) {
+    const {improvingValue, competenceId, courseId} = createImprovingCompetenceDto;
+    const createdImprovingCompetence =
+      await this.prisma.improvingCompetence.create({
+        data: {
+          improvingValue,
+          competenceId,
+          courseId
+        },
+        include: {
+          competence: true
+        }
+      });
     return createdImprovingCompetence;
   }
 
-  async findAll() {
-    const improvingCompetences = await this.prisma.improvingCompetence.findMany();
-    return improvingCompetences;
+  async update(
+    id: string,
+    updateImprovingCompetenceDto: ReqUpdateImprovingCompetenceDto,
+  ) {
+    const {improvingValue, competenceId} = updateImprovingCompetenceDto;
+    const updatedImprovingCompetence = await this.prisma.improvingCompetence.update({
+      where: {
+        id
+      }, 
+      data: {
+        improvingValue,
+        competenceId
+      }
+    })
+
+    return updatedImprovingCompetence;
   }
 
-  async findOne(id: string) {
-    const imporovingCompetence = await this.prisma.improvingCompetence.findFirst({
+  async remove(id: string) {
+    await this.prisma.improvingCompetence.delete({
       where: {
         id
       }
-    }) 
-    return imporovingCompetence;
-  }
-
-  update(id: string, updateImprovingCompetenceDto: UpdateImprovingCompetenceDto) {
-    return `This action updates a #${id} improvingCompetence`;
-  }
-
-  remove(id: string) {
-    return `This action removes a #${id} improvingCompetence`;
+    })
   }
 }
