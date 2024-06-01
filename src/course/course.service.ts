@@ -126,6 +126,20 @@ export class CourseService {
       data:{
         name,
         students,
+      },
+      include: {
+        students: true,
+        events: true,
+        improvingCompetencies: {
+          include: {
+            competence: true
+          }
+        },
+        prerequisiteCompetencies: {
+          include: {
+            competence: true
+          }
+        }
       }
     })
     return updateCourse;
@@ -166,6 +180,12 @@ export class CourseService {
           },
         },
       },
+      include: {
+        students: true,
+        events: true,
+        improvingCompetencies: true,
+        prerequisiteCompetencies: true
+      }
     })
     return updateCourse;
   }
