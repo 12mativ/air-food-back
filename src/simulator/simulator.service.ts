@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateSimulatorDto } from './dto/create-simulator.dto';
-import { UpdateSimulatorDto } from './dto/update-simulator.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Simulator } from './entities/simulator.entity';
+import { CreateSimulatorDto } from './dto/create-simulator.dto';
 import { GetSimulatorsResponseDto } from './dto/get-simulator-response.dto';
+import { UpdateSimulatorDto } from './dto/update-simulator.dto';
 
 @Injectable()
 export class SimulatorService {
@@ -14,10 +13,6 @@ export class SimulatorService {
       data: {
         ...createSimulatorDto
       },
-      include: {
-        coaches: true,
-        events: true
-      }
     })
     return createdSimulator;
   }
@@ -108,7 +103,21 @@ export class SimulatorService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} simulator`;
+  async remove(id: string) {
+    const currentSimulator = await this.prisma.simulator.findFirst({
+      where: {
+        id
+      }
+    })
+
+    if (!currentSimulator) {
+      throw new BadRequestException("Тренажера с таким id не существует")
+    }
+
+    await this.prisma.simulator.delete({
+      where: {
+        id
+      }
+    })
   }
 }

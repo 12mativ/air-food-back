@@ -1,11 +1,10 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Simulator } from "../entities/simulator.entity";
-
+import { ApiProperty } from '@nestjs/swagger';
+import { ResGetSimulatorDto } from './res-get-simulator.dto';
 
 export class GetSimulatorsResponseDto {
-    @ApiProperty()
-    simulator: Simulator[];
-    
-    @ApiProperty()
-    simulatorsTotalAmount: number
+  @ApiProperty({ type: ResGetSimulatorDto, isArray: true })
+  simulator: ResGetSimulatorDto[];
+
+  @ApiProperty()
+  simulatorsTotalAmount: number;
 }

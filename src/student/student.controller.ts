@@ -14,6 +14,7 @@ import { PageRequestDto } from '../pagination/dto/query-page-request.dto';
 import { UpdateStudentRequestDto } from './dto/req-update-student.dto';
 import { GetStudentsResponseDto } from './dto/res-get-students.dto';
 import { StudentService } from './student.service';
+import { ResGetStudentDto } from './dto/res-get-student.dto';
 
 @ApiTags('Student')
 @Controller('student')
@@ -35,6 +36,7 @@ export class StudentController {
 
   @Roles(Role.ADMIN)
   @Patch(':id')
+  @ApiOkResponse({type: ResGetStudentDto})
   updateStudent(
     @Param('id') id: string,
     @Body() updateStudentDto: UpdateStudentRequestDto,

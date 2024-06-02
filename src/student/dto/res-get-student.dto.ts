@@ -1,8 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsOptional, IsString } from 'class-validator';
-import { ResGetCourseDto } from 'src/course/dto/res-get-course.dto';
-import { Course } from 'src/course/entities/course.entity';
 import { ResGetStudentCompetenceCharacteristicDto } from 'src/student-competence-characteristic/dto/res-get-student-competence-characteristic.dto';
+
+class CourseForStudentDto {
+  @IsString()
+  @ApiProperty()
+  id: string;
+
+  @IsString()
+  @ApiProperty()
+  name: string;
+
+  @IsDateString()
+  @IsOptional()
+  @ApiProperty()
+  startDate: string;
+
+  @IsDateString()
+  @IsOptional()
+  @ApiProperty()
+  endDate: string;
+
+  @IsDateString()
+  @ApiProperty()
+  creatorId: string;
+}
 
 export class ResGetStudentDto {
   @ApiProperty()
@@ -44,8 +66,8 @@ export class ResGetStudentDto {
   competences: ResGetStudentCompetenceCharacteristicDto[];
 
   @ApiProperty({
-    type: ResGetCourseDto,
+    type: CourseForStudentDto,
     isArray: true,
   })
-  courses: ResGetCourseDto[];
+  courses: CourseForStudentDto[];
 }

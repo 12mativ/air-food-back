@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateCoachDto } from './dto/create-coach.dto';
-import { UpdateCoachDto } from './dto/update-coach.dto';
+import { ReqUpdateCoachDto } from './dto/req-update-coach.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { GetCoachesResponseDto } from './dto/get-coach-response.dto';
+import { ResGetCoachesDto } from './dto/res-get-coaches.dto';
 
 @Injectable()
 export class CoachService {
@@ -11,7 +10,7 @@ export class CoachService {
     coachForSearch: string,
     page: number,
     limit: number,
-  ): Promise<GetCoachesResponseDto> {
+  ): Promise<ResGetCoachesDto> {
     let coachesTotalAmount;
     let coaches;
 
@@ -72,8 +71,8 @@ export class CoachService {
           id: 'asc',
         },
         include: {
-          events: true
-        }
+          events: true,
+        },
       });
     } else {
       coachesTotalAmount = await this.prisma.coach.count();
@@ -84,8 +83,8 @@ export class CoachService {
           id: 'asc',
         },
         include: {
-          events: true
-        }
+          events: true,
+        },
       });
     }
 
@@ -97,27 +96,29 @@ export class CoachService {
     return payload;
   }
 
-  async update(id: string, updateCoachDto: UpdateCoachDto) {
-    const {firstName, lastName, middleName, simulatorId} = updateCoachDto
-    const simulators = simulatorId ? {connect: {id: simulatorId}} : {}
-    const currentSimulator = await this.prisma.simulator.findFirst({where: {id: simulatorId}})
-    if(!currentSimulator){
-      throw new BadRequestException("Тренажера с таким id не существует")
+  async update(id: string, updateCoachDto: ReqUpdateCoachDto) {
+    const { firstName, lastName, middleName, simulatorId } = updateCoachDto;
+    const simulators = simulatorId ? { connect: { id: simulatorId } } : {};
+    const currentSimulator = await this.prisma.simulator.findFirst({
+      where: { id: simulatorId },
+    });
+    if (!currentSimulator) {
+      throw new BadRequestException('Тренажера с таким id не существует');
     }
     const updatedCoach = await this.prisma.coach.update({
       where: {
-        id
+        id,
       },
-      data: { 
-        firstName, 
-        lastName, 
+      data: {
+        firstName,
+        lastName,
         middleName,
-        simulators:simulators
+        simulators: simulators,
       },
       include: {
-        simulators: true
-      }
-    })
+        simulators: true,
+      },
+    });
     return updatedCoach;
   }
 }
