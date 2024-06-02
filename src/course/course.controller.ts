@@ -16,6 +16,7 @@ import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/req-create-course.dto';
 import { UpdateCourseDto } from './dto/req-update-course.dto';
 import { Course } from './entities/course.entity';
+import { UpdateCourseDeleteStudentDto } from './dto/update-course-delete-student.dto';
 
 @ApiTags('Course')
 @Controller('course')
@@ -58,8 +59,14 @@ export class CourseController {
     return this.courseService.update(id, updateCourseDto);
   }
 
+  @Patch('/delete-student/:id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  disconnectStudent(@Param('id') id: string, @Body() updateCourseDeleteStudentDto: UpdateCourseDeleteStudentDto) {
+    return this.courseService.disconnectStudent(id, updateCourseDeleteStudentDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.courseService.remove(+id);
+    return this.courseService.remove(id);
   }
 }

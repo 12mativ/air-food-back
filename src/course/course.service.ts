@@ -4,6 +4,7 @@ import { CreateCourseDto } from './dto/req-create-course.dto';
 import { UpdateCourseDto } from './dto/req-update-course.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from 'src/role/role.enum';
+import { UpdateCourseDeleteStudentDto } from './dto/update-course-delete-student.dto';
 
 @Injectable()
 export class CourseService {
@@ -116,19 +117,46 @@ export class CourseService {
   }
 
   async update(id: string, updateCourseDto: UpdateCourseDto) {
-    const { name } = updateCourseDto;
+    const { name, idStudent } = updateCourseDto;
+    const students = idStudent ? {connect: {id: idStudent}} : {}
+
     const updateCourse = await this.prisma.course.update({
       where: {
         id,
       },
-      data: {
+      data:{
         name,
+        students,
       },
-    });
+      include: {
+        students: true,
+        events: true,
+        improvingCompetencies: {
+          include: {
+            competence: true
+          }
+        },
+        prerequisiteCompetencies: {
+          include: {
+            competence: true
+          }
+        }
+      }
+    })
     return updateCourse;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: string) {
+    const course = await this.prisma.course.findUnique({
+      where: { id },
+    });
+
+    if (!course) {
+      throw new BadRequestException('Курс с таким id не существует');
+    }
+
+    await this.prisma.course.delete({
+      where: { id },
+    });
   }
 }
