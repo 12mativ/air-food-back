@@ -24,6 +24,10 @@ export class EventService {
         startDate: createEventDto.startDate,
         endDate: createEventDto.endDate,
         courseId: createEventDto.courseId,
+      },
+      include: {
+        coaches: true,
+        simulators: true
       }
     })
 
@@ -57,20 +61,6 @@ export class EventService {
       }
     })
     return createdEvent;
-  }
-
-  async findAll() {
-    const events = await this.prisma.event.findMany();
-    return events;
-  }
-
-  async findOne(id: string) {
-    const event = await this.prisma.event.findFirst({
-      where: {
-        id
-      }
-    }) 
-    return event;
   }
 
   async update(id: string, updateEventDto: UpdateEventDto) {

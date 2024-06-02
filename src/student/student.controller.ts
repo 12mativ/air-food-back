@@ -4,19 +4,16 @@ import {
   Get,
   Param,
   Patch,
-  Query,
-  ValidationPipe,
+  Query
 } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Role } from 'src/role/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
-import { GetStudentsResponseDto } from './dto/get-students-response.dto';
-import { StudentService } from './student.service';
-import { PageRequestDto } from '../pagination/dto/query-page-request.dto';
 import { LimitRequestDto } from '../pagination/dto/query-limit-request.dto';
-import { Student } from './entities/student.entity';
-import { Prisma } from '@prisma/client';
-import { UpdateStudentRequestDto } from './dto/update-student-request.dto';
+import { PageRequestDto } from '../pagination/dto/query-page-request.dto';
+import { UpdateStudentRequestDto } from './dto/req-update-student.dto';
+import { GetStudentsResponseDto } from './dto/res-get-students.dto';
+import { StudentService } from './student.service';
 
 @ApiTags('Student')
 @Controller('student')
@@ -27,6 +24,7 @@ export class StudentController {
   @Roles(Role.ADMIN)
   @ApiQuery({ name: 'page' })
   @ApiQuery({ name: 'limit' })
+  @ApiOkResponse({type: GetStudentsResponseDto})
   findStudentForSearch(
     @Query('studentForSearch') studentForSearch: string,
     @Query('page') page: PageRequestDto,

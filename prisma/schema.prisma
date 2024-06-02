@@ -95,8 +95,6 @@ model Event {
   endDate   String @db.Text
   courseId  String 
 
-  prerequisiteEvents Event[]     @relation("EventPrerequisiteEvents")
-  eventsRelation     Event[]     @relation("EventPrerequisiteEvents")
   course             Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
   coaches            Coach[]
   simulators         Simulator[]

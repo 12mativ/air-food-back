@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { GetStudentsResponseDto } from './dto/get-students-response.dto';
-import { UpdateStudentRequestDto } from './dto/update-student-request.dto';
+import { GetStudentsResponseDto } from './dto/res-get-students.dto';
+import { UpdateStudentRequestDto } from './dto/req-update-student.dto';
 
 @Injectable()
 export class StudentService {
@@ -69,10 +69,10 @@ export class StudentService {
           courses: true,
           competences: {
             include: {
-              competence: true
-            }
-          }
-        }
+              competence: true,
+            },
+          },
+        },
       });
     } else {
       studentsTotalAmount = await this.prisma.student.count();
@@ -86,10 +86,10 @@ export class StudentService {
           courses: true,
           competences: {
             include: {
-              competence: true
-            }
-          }
-        }
+              competence: true,
+            },
+          },
+        },
       });
     }
 
@@ -102,8 +102,9 @@ export class StudentService {
   }
 
   async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
-    const { firstName, lastName, middleName, birthDate, courseId } = updateStudentDto;
-    const courses = courseId ? {connect: {id: courseId}} : {}
+    const { firstName, lastName, middleName, birthDate, courseId } =
+      updateStudentDto;
+    const courses = courseId ? { connect: { id: courseId } } : {};
     try {
       const updatedStudent = await this.prisma.student.update({
         where: {
@@ -114,11 +115,11 @@ export class StudentService {
           middleName,
           lastName,
           birthDate,
-          courses: courses
+          courses: courses,
         },
         include: {
-          courses: true
-        }
+          courses: true,
+        },
       });
 
       return updatedStudent;

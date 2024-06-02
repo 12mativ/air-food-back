@@ -17,17 +17,6 @@ export class EventController {
     return this.eventService.create(createEventDto);
   }
 
-  @Get()
-  @Roles(Role.ADMIN)
-  findAll() {
-    return this.eventService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventService.findOne(id);
-  }
-
   @Patch(':id')
   @Roles(Role.ADMIN,Role.COURSE_ORGANISER)
   update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
