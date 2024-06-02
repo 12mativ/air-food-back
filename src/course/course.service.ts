@@ -8,109 +8,108 @@ import { UpdateCourseDeleteStudentDto } from './dto/update-course-delete-student
 
 @Injectable()
 export class CourseService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly prisma: PrismaService, private readonly jwtService: JwtService) {}
 
   async create(createCourseDto: CreateCourseDto, jwt: string) {
-    const decodedJwt = this.jwtService.decode(jwt);
 
+    const decodedJwt = this.jwtService.decode(jwt);
+    
     const user = await this.prisma.user.findFirst({
       where: {
-        email: decodedJwt.email,
-      },
-    });
-
+        email: decodedJwt.email
+      }
+    })
+    
     const createdCourse = await this.prisma.course.create({
       data: {
         ...createCourseDto,
         startDate: null,
         endDate: null,
-        creatorId: user.id,
+        creatorId: user.id
       },
       include: {
         improvingCompetencies: true,
         events: true,
-        prerequisiteCompetencies: true,
-      },
-    });
+        prerequisiteCompetencies: true
+      }
+    })
     return createdCourse;
   }
-
+ 
   async findAll() {
     const courses = await this.prisma.course.findMany({
       include: {
         improvingCompetencies: {
           include: {
-            competence: true,
-          },
+            competence: true
+          }
         },
         events: {
           include: {
             coaches: true,
-            simulators: true,
-          },
+            simulators: true
+          }
         },
         prerequisiteCompetencies: {
           include: {
-            competence: true,
-          },
+            competence: true
+          }
         },
-        students: true,
-      },
-    });
+        students: true
+      }
+    })
     return courses;
   }
 
   async findAllForUser(jwt: string) {
     const decodedJwt = this.jwtService.decode(jwt);
-
+    
     const user = await this.prisma.user.findFirst({
       where: {
-        email: decodedJwt.email,
-      },
-    });
+        email: decodedJwt.email
+      }
+    })
+
 
     const courses = await this.prisma.course.findMany({
-      where: {
+      where:{
         OR: [
           {
-            creatorId: user.id,
+            creatorId: user.id
           },
           {
             students: {
               some: {
-                userId: user.id,
-              },
-            },
-          },
-        ],
+                userId: user.id
+              }
+            }
+          }
+        ]
       },
       include: {
         improvingCompetencies: true,
         events: true,
         prerequisiteCompetencies: true,
-        students: user.roles.includes(Role.COURSE_ORGANISER) ? true : false,
-      },
-    });
+        students: user.roles.includes(Role.COURSE_ORGANISER) ? true : false
+      }
+    })
     return courses;
   }
 
   async findOne(id: string) {
     const course = await this.prisma.course.findFirst({
       where: {
-        id,
+        id
       },
       include: {
         improvingCompetencies: true,
         events: true,
-        prerequisiteCompetencies: true,
-      },
-    });
+        prerequisiteCompetencies: true
+      }
+    })
 
     if (!course) {
-      throw new BadRequestException('Курса с таким id не существует');
+      throw new BadRequestException("Курса с таким id не существует")
     }
 
     return course;
@@ -141,6 +140,51 @@ export class CourseService {
             competence: true
           }
         }
+      }
+    })
+    return updateCourse;
+  }
+
+  async disconnectStudent(id: string, updateCourseDeleteStudentDto: UpdateCourseDeleteStudentDto) {
+    const currentCourse = await this.prisma.course.findFirst({
+      where: {
+        id,
+      },
+    })
+    if (!currentCourse){
+      throw new BadRequestException("Курса с таким id не существует")
+    }
+
+    const currentStudentOnCourse = await this.prisma.course.findFirst({
+      where: {
+        id,
+        students: {
+          some: {
+            id: updateCourseDeleteStudentDto.idStudent,
+          },
+        },
+      },
+    })
+    if (!currentStudentOnCourse){
+      throw new BadRequestException("Студента с таким id на курсе не существует")
+    }
+
+    const updateCourse = await this.prisma.course.update({
+      where: {
+        id: id,
+      },
+      data:{
+        students: {
+          disconnect: {
+            id: updateCourseDeleteStudentDto.idStudent,
+          },
+        },
+      },
+      include: {
+        students: true,
+        events: true,
+        improvingCompetencies: true,
+        prerequisiteCompetencies: true
       }
     })
     return updateCourse;
