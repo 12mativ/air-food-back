@@ -5,5 +5,5 @@ export class UpdateEventDeleteCoachDto {
     @ApiProperty()
     @IsString()
     @IsOptional()
-    idCoach?: string;
+    coachId?: string;
 }

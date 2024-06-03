@@ -116,8 +116,8 @@ export class CourseService {
   }
 
   async update(id: string, updateCourseDto: UpdateCourseDto) {
-    const { name, idStudent } = updateCourseDto;
-    const students = idStudent ? {connect: {id: idStudent}} : {}
+    const { name, studentId } = updateCourseDto;
+    const students = studentId ? {connect: {id: studentId}} : {}
 
     const updateCourse = await this.prisma.course.update({
       where: {
@@ -160,7 +160,7 @@ export class CourseService {
         id,
         students: {
           some: {
-            id: updateCourseDeleteStudentDto.idStudent,
+            id: updateCourseDeleteStudentDto.studentId,
           },
         },
       },
@@ -176,7 +176,7 @@ export class CourseService {
       data:{
         students: {
           disconnect: {
-            id: updateCourseDeleteStudentDto.idStudent,
+            id: updateCourseDeleteStudentDto.studentId,
           },
         },
       },

@@ -1,9 +1,9 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
-export class UpdateCourseDeleteStudentDto {
+export class updateEventDeleteSimulatorDto {
     @ApiProperty()
     @IsString()
     @IsOptional()
-    studentId?: string;
+    idSimulator?: string;
 }

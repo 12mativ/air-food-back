@@ -3,6 +3,8 @@ import { CreateEventDto } from './dto/req-create-event.dto';
 import { UpdateEventDto } from './dto/req-update-event.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateEventDeleteCoachDto } from './dto/req-update-event-delete-coach.dto';
+import { UpdateCourseDeleteStudentDto } from 'src/course/dto/update-course-delete-student.dto';
+import { updateEventDeleteSimulatorDto } from './dto/req-update-event-delete-simulator.dto';
 
 @Injectable()
 export class EventService {
@@ -65,17 +67,27 @@ export class EventService {
     const { name, startDate, endDate, coachId, simulatorId } = updateEventDto;
     const coaches = coachId ? { connect: { id: coachId } } : {};
     const simulators = simulatorId ? { connect: { id: simulatorId } } : {};
-    const currentCoach = await this.prisma.coach.findFirst({
-      where: { id: coachId },
+    const currentEvent = await this.prisma.event.findFirst({
+      where: { id: id },
     });
-    const currentSimulator = await this.prisma.simulator.findFirst({
-      where: { id: simulatorId },
-    });
-    if (!currentCoach) {
-      throw new BadRequestException('Тренера с таким id не существует');
+    if (!currentEvent) {
+      throw new BadRequestException('Мероприятия с таким id не существует');
     }
-    if (!currentSimulator) {
-      throw new BadRequestException('Тренажера с таким id не существует');
+    if(coachId){
+      const currentCoach = await this.prisma.coach.findFirst({
+        where: { id: coachId },
+      });
+      if (!currentCoach) {
+        throw new BadRequestException('Тренера с таким id не существует');
+      }
+    }
+    if(simulatorId){
+      const currentSimulator = await this.prisma.simulator.findFirst({
+        where: { id: simulatorId },
+      });
+      if (!currentSimulator) {
+        throw new BadRequestException('Тренажера с таким id не существует');
+      }
     }
     const updatedEvent = await this.prisma.event.update({
       where: {
@@ -106,7 +118,7 @@ export class EventService {
       },
     });
     if (!currentEvent) {
-      throw new BadRequestException('События с таким id не существует');
+      throw new BadRequestException('Мероприятия с таким id не существует');
     }
 
     const currentCoachOnEvent = await this.prisma.event.findFirst({
@@ -114,7 +126,7 @@ export class EventService {
         id,
         coaches: {
           some: {
-            id: updateEventDeleteCoachDto.idCoach,
+            id: updateEventDeleteCoachDto.coachId,
           },
         },
       },
@@ -132,13 +144,58 @@ export class EventService {
       data: {
         coaches: {
           disconnect: {
-            id: updateEventDeleteCoachDto.idCoach,
+            id: updateEventDeleteCoachDto.coachId,
           },
         },
       },
     });
     return updateCourse;
   }
+
+  async disconnectSimulator(
+    id: string,
+    updateEventDeleteSimulatorDto: updateEventDeleteSimulatorDto,
+  ) {
+    const currentEvent = await this.prisma.event.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!currentEvent) {
+      throw new BadRequestException('Мероприятия с таким id не существует');
+    }
+
+    const currentSimulatorOnEvent = await this.prisma.event.findFirst({
+      where: {
+        id,
+        simulators: {
+          some: {
+            id: updateEventDeleteSimulatorDto.idSimulator,
+          },
+        },
+      },
+    });
+    if (!currentSimulatorOnEvent) {
+      throw new BadRequestException(
+        'Тренажера с таким id на событии не существует',
+      );
+    }
+
+    const updateEvent = await this.prisma.event.update({
+      where: {
+        id: id,
+      },
+      data: {
+        simulators: {
+          disconnect: {
+            id: updateEventDeleteSimulatorDto.idSimulator,
+          },
+        },
+      },
+    });
+    return updateEvent;
+  }
+
   async remove(id: string) {
     const event = await this.prisma.event.findFirst({
       where: { id },

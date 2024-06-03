@@ -16,6 +16,8 @@ import { Role } from 'src/role/role.enum';
 import { Roles } from 'src/roles/roles.decorator';
 import { UpdateEventDeleteCoachDto } from './dto/req-update-event-delete-coach.dto';
 import { ResGetEventDto } from './dto/res-get-event.dto';
+import { ResGetCourseDto } from 'src/course/dto/res-get-course.dto';
+import { updateEventDeleteSimulatorDto } from './dto/req-update-event-delete-simulator.dto';
 
 @ApiTags('Event')
 @Controller('event')
@@ -44,6 +46,13 @@ export class EventController {
     @Body() updateEventDeleteCoachDto: UpdateEventDeleteCoachDto,
   ) {
     return this.eventService.disconnectCoach(id, updateEventDeleteCoachDto);
+  }
+
+  @Patch('/delete-simulator/:id')
+  @ApiOkResponse({ type: ResGetEventDto })
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  disconnectSimulator(@Param('id') id: string, @Body() updateEventDeleteSimulatorDto: updateEventDeleteSimulatorDto) {
+    return this.eventService.disconnectSimulator(id, updateEventDeleteSimulatorDto);
   }
 
   @Delete(':id')
