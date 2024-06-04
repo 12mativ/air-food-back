@@ -1,14 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateEventDto } from './dto/req-create-event.dto';
-import { UpdateEventDto } from './dto/req-update-event.dto';
+import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateEventDto } from './dto/req-create-event.dto';
 import { UpdateEventDeleteCoachDto } from './dto/req-update-event-delete-coach.dto';
-import { UpdateCourseDeleteStudentDto } from 'src/course/dto/update-course-delete-student.dto';
 import { updateEventDeleteSimulatorDto } from './dto/req-update-event-delete-simulator.dto';
+import { UpdateEventDto } from './dto/req-update-event.dto';
+import { Role } from 'src/role/role.enum';
 
 @Injectable()
 export class EventService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async create(createEventDto: CreateEventDto) {
     const course = await this.prisma.course.findFirst({
@@ -27,10 +31,6 @@ export class EventService {
         startDate: createEventDto.startDate,
         endDate: createEventDto.endDate,
         courseId: createEventDto.courseId,
-      },
-      include: {
-        coaches: true,
-        simulators: true,
       },
     });
 
@@ -63,17 +63,48 @@ export class EventService {
     return createdEvent;
   }
 
+  async findEvents(courseId: string, jwt: string) {
+    const decodedJwt = this.jwtService.decode(jwt);
+
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email: decodedJwt.email,
+      },
+    });
+
+    const selectForCoach = {
+      where: {
+        coaches: {
+          some: {
+            id: user.id,
+          },
+        },
+      },
+    };
+
+    const events = await this.prisma.course.findFirst({
+      where: {
+        id: courseId,
+      },
+      select: {
+        events: user.roles.includes(Role.COACH) ? selectForCoach : true,
+      },
+    });
+
+    return events;
+  }
+
   async update(id: string, updateEventDto: UpdateEventDto) {
     const { name, startDate, endDate, coachId, simulatorId } = updateEventDto;
     const coaches = coachId ? { connect: { id: coachId } } : {};
     const simulators = simulatorId ? { connect: { id: simulatorId } } : {};
     const currentEvent = await this.prisma.event.findFirst({
-      where: { id: id },
+      where: { id },
     });
     if (!currentEvent) {
       throw new BadRequestException('Мероприятия с таким id не существует');
     }
-    if(coachId){
+    if (coachId) {
       const currentCoach = await this.prisma.coach.findFirst({
         where: { id: coachId },
       });
@@ -81,7 +112,7 @@ export class EventService {
         throw new BadRequestException('Тренера с таким id не существует');
       }
     }
-    if(simulatorId){
+    if (simulatorId) {
       const currentSimulator = await this.prisma.simulator.findFirst({
         where: { id: simulatorId },
       });
@@ -100,14 +131,11 @@ export class EventService {
         coaches: coaches,
         simulators: simulators,
       },
-      include: {
-        coaches: true,
-        simulators: true,
-      },
     });
 
     return updatedEvent;
   }
+
   async disconnectCoach(
     id: string,
     updateEventDeleteCoachDto: UpdateEventDeleteCoachDto,
@@ -139,7 +167,7 @@ export class EventService {
 
     const updateCourse = await this.prisma.event.update({
       where: {
-        id: id,
+        id,
       },
       data: {
         coaches: {

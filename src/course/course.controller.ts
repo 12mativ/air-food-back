@@ -47,15 +47,8 @@ export class CourseController {
     return this.courseService.findAllForUser(jwt);
   }
 
-  @Get(':id')
-  @ApiOkResponse({ type: ResGetCourseDto })
-  @ApiParam({ name: 'id' })
-  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  findOne(@Param('id') id: string) {
-    return this.courseService.findOne(id);
-  }
-
   @Patch(':id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   @ApiOkResponse({ type: ResGetCourseDto })
   update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
     return this.courseService.update(id, updateCourseDto);
@@ -63,12 +56,13 @@ export class CourseController {
 
   @Patch('/delete-student/:id')
   @ApiOkResponse({ type: ResGetCourseDto })
-  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  @Roles(Role.ADMIN)
   disconnectStudent(@Param('id') id: string, @Body() updateCourseDeleteStudentDto: UpdateCourseDeleteStudentDto) {
     return this.courseService.disconnectStudent(id, updateCourseDeleteStudentDto);
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   remove(@Param('id') id: string) {
     return this.courseService.remove(id);
   }

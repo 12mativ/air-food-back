@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Simulator } from '@prisma/client';
 import { IsDateString, IsString } from 'class-validator';
-import { ResGetCoachDto } from 'src/coach/dto/res-get-coach.dto';
 
 export class ResGetEventDto {
   @ApiProperty()
@@ -23,10 +21,4 @@ export class ResGetEventDto {
   @ApiProperty()
   @IsString()
   courseId: string;
-
-  @ApiProperty({type: ResGetCoachDto, isArray: true})
-  coaches: ResGetCoachDto[];
-
-  @ApiProperty()
-  simulators: Simulator[];
 }

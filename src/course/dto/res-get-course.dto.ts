@@ -31,7 +31,4 @@ export class ResGetCourseDto {
 
   @ApiProperty({type: ResGetImprovingCompetenceDto, isArray: true})
   improvingCompetencies: ResGetImprovingCompetenceDto[];
-
-  @ApiProperty()
-  events: Event[];
 }

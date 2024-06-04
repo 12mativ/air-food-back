@@ -28,9 +28,16 @@ export class CourseService {
         creatorId: user.id
       },
       include: {
-        improvingCompetencies: true,
-        events: true,
-        prerequisiteCompetencies: true
+        improvingCompetencies: {
+          include: {
+            competence: true
+          }
+        },
+        prerequisiteCompetencies: {
+          include: {
+            competence: true
+          }
+        }
       }
     })
     return createdCourse;
@@ -44,18 +51,11 @@ export class CourseService {
             competence: true
           }
         },
-        events: {
-          include: {
-            coaches: true,
-            simulators: true
-          }
-        },
         prerequisiteCompetencies: {
           include: {
             competence: true
           }
         },
-        students: true
       }
     })
     return courses;
@@ -69,7 +69,6 @@ export class CourseService {
         email: decodedJwt.email
       }
     })
-
 
     const courses = await this.prisma.course.findMany({
       where:{
@@ -87,32 +86,19 @@ export class CourseService {
         ]
       },
       include: {
-        improvingCompetencies: true,
-        events: true,
-        prerequisiteCompetencies: true,
-        students: user.roles.includes(Role.COURSE_ORGANISER) ? true : false
+        improvingCompetencies: {
+          include: {
+            competence: true
+          }
+        },
+        prerequisiteCompetencies: {
+          include: {
+            competence: true
+          }
+        },
       }
     })
     return courses;
-  }
-
-  async findOne(id: string) {
-    const course = await this.prisma.course.findFirst({
-      where: {
-        id
-      },
-      include: {
-        improvingCompetencies: true,
-        events: true,
-        prerequisiteCompetencies: true
-      }
-    })
-
-    if (!course) {
-      throw new BadRequestException("Курса с таким id не существует")
-    }
-
-    return course;
   }
 
   async update(id: string, updateCourseDto: UpdateCourseDto) {
@@ -128,8 +114,6 @@ export class CourseService {
         students,
       },
       include: {
-        students: true,
-        events: true,
         improvingCompetencies: {
           include: {
             competence: true
@@ -181,10 +165,16 @@ export class CourseService {
         },
       },
       include: {
-        students: true,
-        events: true,
-        improvingCompetencies: true,
-        prerequisiteCompetencies: true
+        improvingCompetencies: {
+          include: {
+            competence: true
+          }
+        },
+        prerequisiteCompetencies: {
+          include: {
+            competence: true
+          }
+        }
       }
     })
     return updateCourse;
