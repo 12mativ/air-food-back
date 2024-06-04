@@ -198,7 +198,7 @@ export class EventService {
         id,
         simulators: {
           some: {
-            id: updateEventDeleteSimulatorDto.idSimulator,
+            id: updateEventDeleteSimulatorDto.simulatorId,
           },
         },
       },
@@ -211,12 +211,12 @@ export class EventService {
 
     const updateEvent = await this.prisma.event.update({
       where: {
-        id: id,
+        id,
       },
       data: {
         simulators: {
           disconnect: {
-            id: updateEventDeleteSimulatorDto.idSimulator,
+            id: updateEventDeleteSimulatorDto.simulatorId,
           },
         },
       },

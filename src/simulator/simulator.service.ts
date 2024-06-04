@@ -56,9 +56,6 @@ export class SimulatorService {
         orderBy: {
           id: 'asc',
         },
-        include: {
-          events: true
-        }
       });
     } else {
       simulatorsTotalAmount = await this.prisma.simulator.count();
@@ -68,9 +65,6 @@ export class SimulatorService {
         orderBy: {
           id: 'asc',
         },
-        include: {
-          events: true
-        }
       });
     }
 
