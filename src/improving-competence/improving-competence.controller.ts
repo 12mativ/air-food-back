@@ -1,20 +1,18 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  ValidationPipe,
+  Param,
+  Patch,
+  Post
 } from '@nestjs/common';
-import { ImprovingCompetenceService } from './improving-competence.service';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Role } from '../role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { ReqCreateImprovingCompetenceDto } from './dto/req-create-improving-competence.dto';
 import { ReqUpdateImprovingCompetenceDto } from './dto/req-update-improving-competence.dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/roles/roles.decorator';
-import { Role } from 'src/role/role.enum';
 import { ResGetImprovingCompetenceDto } from './dto/res-get-improving-competence.dto';
+import { ImprovingCompetenceService } from './improving-competence.service';
 
 @ApiTags('ImprovingСompetence')
 @Controller('improving-competence')

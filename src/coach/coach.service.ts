@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ReqUpdateCoachDto } from './dto/req-update-coach.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { ResGetCoachesDto } from './dto/res-get-coaches.dto';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ReqCreateCourseCompetenceCharacteristicDto } from './dto/req-create-course-competence-characteristic.dto';
 import { ReqUpdateCourseCompetenceCharacteristicDto } from './dto/req-update-course-competence-characteristic.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CourseCompetenceCharacteristicService {
@@ -31,17 +31,19 @@ export class CourseCompetenceCharacteristicService {
     id: string,
     updateCourseCompetenceCharacteristicDto: ReqUpdateCourseCompetenceCharacteristicDto,
   ) {
-    const {scaleValue, competenceId} = updateCourseCompetenceCharacteristicDto;
+    const { scaleValue, competenceId } =
+      updateCourseCompetenceCharacteristicDto;
 
-    const updatedCourseCompetenceCharacteristic = await this.prisma.courseCompetenceCharacteristic.update({
-      where: {
-        id
-      },
-      data: {
-        scaleValue,
-        competenceId
-      }
-    })
+    const updatedCourseCompetenceCharacteristic =
+      await this.prisma.courseCompetenceCharacteristic.update({
+        where: {
+          id,
+        },
+        data: {
+          scaleValue,
+          competenceId,
+        },
+      });
 
     return updatedCourseCompetenceCharacteristic;
   }
@@ -49,8 +51,8 @@ export class CourseCompetenceCharacteristicService {
   async remove(id: string) {
     await this.prisma.courseCompetenceCharacteristic.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 }

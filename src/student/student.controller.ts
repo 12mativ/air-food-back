@@ -7,8 +7,8 @@ import {
   Query
 } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '../role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { LimitRequestDto } from '../pagination/dto/query-limit-request.dto';
 import { PageRequestDto } from '../pagination/dto/query-page-request.dto';
 import { UpdateStudentRequestDto } from './dto/req-update-student.dto';

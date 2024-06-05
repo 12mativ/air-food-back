@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ReqCreateStudentCompetenceCharacteristicDto } from './dto/req-create-student-competence-characteristic.dto';
 import { ReqUpdateStudentCompetenceCharacteristicDto } from './dto/req-update-student-competence-characteristic.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class StudentCompetenceCharacteristicService {

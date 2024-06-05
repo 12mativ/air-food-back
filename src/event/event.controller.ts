@@ -9,8 +9,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '../role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { CreateEventDto } from './dto/req-create-event.dto';
 import { UpdateEventDeleteCoachDto } from './dto/req-update-event-delete-coach.dto';
 import { updateEventDeleteSimulatorDto } from './dto/req-update-event-delete-simulator.dto';

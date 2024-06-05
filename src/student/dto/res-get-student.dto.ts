@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsOptional, IsString } from 'class-validator';
-import { ResGetStudentCompetenceCharacteristicDto } from 'src/student-competence-characteristic/dto/res-get-student-competence-characteristic.dto';
+import { ResGetStudentCompetenceCharacteristicDto } from '../../student-competence-characteristic/dto/res-get-student-competence-characteristic.dto';
 
 class CourseForStudentDto {
   @IsString()

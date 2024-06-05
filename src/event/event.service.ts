@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+
 import { CreateEventDto } from './dto/req-create-event.dto';
 import { UpdateEventDeleteCoachDto } from './dto/req-update-event-delete-coach.dto';
 import { updateEventDeleteSimulatorDto } from './dto/req-update-event-delete-simulator.dto';
 import { UpdateEventDto } from './dto/req-update-event.dto';
-import { Role } from 'src/role/role.enum';
+import { Role } from '../role/role.enum';
 
 @Injectable()
 export class EventService {

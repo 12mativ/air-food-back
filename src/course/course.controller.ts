@@ -9,8 +9,8 @@ import {
   Post
 } from '@nestjs/common';
 import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '../role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/req-create-course.dto';
 import { UpdateCourseDto } from './dto/req-update-course.dto';

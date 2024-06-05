@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '../role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { CompetenceService } from './competence.service';
 import { ReqCreateCompetenceDto } from './dto/req-create-competence.dto';
 import { ResGetCompetenceDto } from './dto/res-get-competence.dto';

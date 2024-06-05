@@ -11,8 +11,8 @@ import { StudentCompetenceCharacteristicService } from './student-competence-cha
 import { ReqCreateStudentCompetenceCharacteristicDto } from './dto/req-create-student-competence-characteristic.dto';
 import { ReqUpdateStudentCompetenceCharacteristicDto } from './dto/req-update-student-competence-characteristic.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/roles/roles.decorator';
-import { Role } from 'src/role/role.enum';
+import { Roles } from '../roles/roles.decorator';
+import { Role } from '../role/role.enum';
 import { ResGetStudentCompetenceCharacteristicDto } from './dto/res-get-student-competence-characteristic.dto';
 
 @ApiTags('StudentCompetenceCharacteristic')

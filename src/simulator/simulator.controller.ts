@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { LimitRequestDto } from 'src/pagination/dto/query-limit-request.dto';
-import { PageRequestDto } from 'src/pagination/dto/query-page-request.dto';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '../role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { CreateSimulatorDto } from './dto/create-simulator.dto';
 import { GetSimulatorsResponseDto } from './dto/get-simulator-response.dto';
 import { ResGetSimulatorDto } from './dto/res-get-simulator.dto';
 import { UpdateSimulatorDto } from './dto/update-simulator.dto';
 import { SimulatorService } from './simulator.service';
+import { PageRequestDto } from '../pagination/dto/query-page-request.dto';
+import { LimitRequestDto } from '../pagination/dto/query-limit-request.dto';
 
 @ApiTags("Simulator")
 @Controller('simulator')

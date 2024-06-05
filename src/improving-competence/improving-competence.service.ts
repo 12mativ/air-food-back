@@ -1,24 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { ReqCreateImprovingCompetenceDto } from './dto/req-create-improving-competence.dto';
 import { ReqUpdateImprovingCompetenceDto } from './dto/req-update-improving-competence.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ImprovingCompetenceService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createImprovingCompetenceDto: ReqCreateImprovingCompetenceDto) {
-    const {improvingValue, competenceId, courseId} = createImprovingCompetenceDto;
+    const { improvingValue, competenceId, courseId } =
+      createImprovingCompetenceDto;
     const createdImprovingCompetence =
       await this.prisma.improvingCompetence.create({
         data: {
           improvingValue,
           competenceId,
-          courseId
+          courseId,
         },
         include: {
-          competence: true
-        }
+          competence: true,
+        },
       });
     return createdImprovingCompetence;
   }
@@ -27,16 +28,17 @@ export class ImprovingCompetenceService {
     id: string,
     updateImprovingCompetenceDto: ReqUpdateImprovingCompetenceDto,
   ) {
-    const {improvingValue, competenceId} = updateImprovingCompetenceDto;
-    const updatedImprovingCompetence = await this.prisma.improvingCompetence.update({
-      where: {
-        id
-      }, 
-      data: {
-        improvingValue,
-        competenceId
-      }
-    })
+    const { improvingValue, competenceId } = updateImprovingCompetenceDto;
+    const updatedImprovingCompetence =
+      await this.prisma.improvingCompetence.update({
+        where: {
+          id,
+        },
+        data: {
+          improvingValue,
+          competenceId,
+        },
+      });
 
     return updatedImprovingCompetence;
   }
@@ -44,8 +46,8 @@ export class ImprovingCompetenceService {
   async remove(id: string) {
     await this.prisma.improvingCompetence.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 }

@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { ResGetEventDto } from 'src/event/dto/res-get-event.dto';
-import { ResGetSimulatorDto } from 'src/simulator/dto/res-get-simulator.dto';
+import { ResGetEventDto } from '../../event/dto/res-get-event.dto';
+import { ResGetSimulatorDto } from '../../simulator/dto/res-get-simulator.dto';
+
 
 export class ResGetCoachDto {
   @ApiProperty()

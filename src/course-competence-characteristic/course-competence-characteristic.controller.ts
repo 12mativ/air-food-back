@@ -7,8 +7,8 @@ import {
   Post
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { Role } from '../role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { CourseCompetenceCharacteristicService } from './course-competence-characteristic.service';
 import { ReqCreateCourseCompetenceCharacteristicDto } from './dto/req-create-course-competence-characteristic.dto';
 import { ReqUpdateCourseCompetenceCharacteristicDto } from './dto/req-update-course-competence-characteristic.dto';

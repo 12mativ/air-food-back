@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { LimitRequestDto } from 'src/pagination/dto/query-limit-request.dto';
-import { PageRequestDto } from 'src/pagination/dto/query-page-request.dto';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/roles/roles.decorator';
+import { LimitRequestDto } from '../pagination/dto/query-limit-request.dto';
+import { PageRequestDto } from '../pagination/dto/query-page-request.dto';
+import { Role } from '..//role/role.enum';
+import { Roles } from '../roles/roles.decorator';
 import { CoachService } from './coach.service';
 import { ReqUpdateCoachDto } from './dto/req-update-coach.dto';
 import { ResGetCoachesDto } from './dto/res-get-coaches.dto';
