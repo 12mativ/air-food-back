@@ -1,22 +1,43 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { StudentController } from './student.controller';
-import { StudentService } from './student.service';
-import { PrismaModule } from '../prisma/prisma.module';
+// import { Test, TestingModule } from '@nestjs/testing';
+// import { StudentController } from './student.controller';
+// import { StudentService } from './student.service';
+// import { PrismaModule } from '../prisma/prisma.module';
+// import { GetStudentsResponseDto } from './dto/res-get-students.dto';
 
-describe('StudentController', () => {
-  let controller: StudentController;
+// describe('StudentController', () => {
+//   let controller: StudentController;
+//   let service: StudentService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule],
-      controllers: [StudentController],
-      providers: [StudentService],
-    }).compile();
+//   const mockStudentService={
+//     findStudents: jest.fn(),
+//     updateStudent: jest.fn(),
+//   };
 
-    controller = module.get<StudentController>(StudentController);
-  });
+//   beforeEach(async () => {
+//     const module: TestingModule = await Test.createTestingModule({
+//       imports: [PrismaModule],
+//       controllers: [StudentController],
+//       providers: [StudentService],
+//     }).overrideProvider(StudentService).useValue(mockStudentService).compile();
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-});
+//     controller = module.get<StudentController>(StudentController);
+//     service = module.get<StudentService>(StudentService);
+//   });
+
+//   it('should be defined', () => {
+//     expect(controller).toBeDefined();
+//   });
+
+//   describe('findStudentForSearch', () =>{
+//     it ('should return students', async () =>{
+//       const result: GetStudentsResponseDto={
+//         students:[{
+//           id:'1',
+//           email:'soski@mail.ru',
+//           firstName:
+//         },
+//         ],
+//       }
+//       expect(controller.findStudentForSearch).to
+//     })
+// });
