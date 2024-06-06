@@ -70,9 +70,6 @@ export class CoachService {
         orderBy: {
           id: 'asc',
         },
-        include: {
-          events: true,
-        },
       });
     } else {
       coachesTotalAmount = await this.prisma.coach.count();
@@ -81,9 +78,6 @@ export class CoachService {
         take: limit,
         orderBy: {
           id: 'asc',
-        },
-        include: {
-          events: true,
         },
       });
     }
@@ -99,11 +93,13 @@ export class CoachService {
   async update(id: string, updateCoachDto: ReqUpdateCoachDto) {
     const { firstName, lastName, middleName, simulatorId } = updateCoachDto;
     const simulators = simulatorId ? { connect: { id: simulatorId } } : {};
-    const currentSimulator = await this.prisma.simulator.findFirst({
-      where: { id: simulatorId },
-    });
-    if (!currentSimulator) {
-      throw new BadRequestException('Тренажера с таким id не существует');
+    if (simulatorId) {
+      const currentSimulator = await this.prisma.simulator.findFirst({
+        where: { id: simulatorId },
+      });
+      if (!currentSimulator) {
+        throw new BadRequestException('Тренажера с таким id не существует');
+      }
     }
     const updatedCoach = await this.prisma.coach.update({
       where: {
@@ -114,9 +110,6 @@ export class CoachService {
         lastName,
         middleName,
         simulators: simulators,
-      },
-      include: {
-        simulators: true,
       },
     });
     return updatedCoach;

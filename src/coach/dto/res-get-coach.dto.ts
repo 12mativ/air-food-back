@@ -10,23 +10,26 @@ export class ResGetCoachDto {
   id: string;
 
   @ApiProperty()
-  @IsOptional()
   @IsString()
-  firstName?: string;
-
+  email: string;
+  
+  
   @ApiProperty()
   @IsOptional()
   @IsString()
-  surname?: string;
-
+  firstName?: string;
+  
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  middleName?: string;
+  
   @ApiProperty()
   @IsOptional()
   @IsString()
   lastName?: string;
 
   @ApiProperty()
-  events: ResGetEventDto[];
-
-  @ApiProperty({type: ResGetSimulatorDto, isArray: true})
-  simulators: ResGetSimulatorDto[];
+  @IsString()
+  userId: string;
 }
