@@ -90,6 +90,19 @@ export class CoachService {
     return payload;
   }
 
+  async getCoachesOnEvent(eventId: string) {
+    const coaches = await this.prisma.event.findFirst({
+      where: {
+        id: eventId
+      },
+      select: {
+        coaches: true
+      }
+    })
+
+    return coaches;
+  }
+
   async update(id: string, updateCoachDto: ReqUpdateCoachDto) {
     const { firstName, lastName, middleName, simulatorId } = updateCoachDto;
     const simulators = simulatorId ? { connect: { id: simulatorId } } : {};

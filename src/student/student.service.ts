@@ -102,6 +102,19 @@ export class StudentService {
     return payload;
   }
 
+  async getStudentsOnCourse(courseId: string) {
+    const students = await this.prisma.course.findFirst({
+      where: {
+        id: courseId
+      },
+      select: {
+        students: true
+      }
+    })
+
+    return students;
+  }
+
   async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
     const { firstName, lastName, middleName, birthDate } = updateStudentDto;
 

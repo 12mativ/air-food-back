@@ -27,6 +27,12 @@ export class CoachController {
     return this.coachService.findCoaches(coachForSearch, +page, +limit);
   }
 
+  @Get(':eventId')
+  @ApiOkResponse({ type: ResGetCoachDto, isArray: true })
+  getCoachesOnEvent(@Param('eventId') eventId: string) {
+    return this.coachService.getCoachesOnEvent(eventId);
+  }
+
   @Patch(':id')
   @ApiOkResponse({ type: ResGetCoachDto })
   update(@Param('id') id: string, @Body() updateCoachDto: ReqUpdateCoachDto) {

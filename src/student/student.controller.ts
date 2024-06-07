@@ -34,6 +34,14 @@ export class StudentController {
     return this.studentService.findStudents(studentForSearch, +page, +limit);
   }
 
+  @Get(':courseId')
+  @ApiOkResponse({type: ResGetStudentDto, isArray: true})
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  getStudentsOnCourse(@Param('courseId') courseId: string) {
+    return this.studentService.getStudentsOnCourse(courseId)
+  }
+
+
   @Roles(Role.ADMIN)
   @Patch(':id')
   @ApiOkResponse({type: ResGetStudentDto})
