@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ResGetSimulatorDto } from './res-get-simulator.dto';
 
-export class GetSimulatorsResponseDto {
+export class ResGetSimulatorsDto {
   @ApiProperty({ type: ResGetSimulatorDto, isArray: true })
-  simulator: ResGetSimulatorDto[];
+  simulators: ResGetSimulatorDto[];
 
   @ApiProperty()
   simulatorsTotalAmount: number;
