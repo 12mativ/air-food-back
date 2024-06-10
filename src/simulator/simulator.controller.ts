@@ -35,6 +35,12 @@ export class SimulatorController {
     return this.simulatorService.findSimulators(simulatorForSearch, +page, +limit);
   }
 
+  @Get(':id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  findSimulatorsOnCourse(@Param('id') id: string) {
+    return this.simulatorService.findSimulatorsOnCourse(id);
+  }
+
   @Patch(':id')
   @ApiOkResponse({type: ResGetSimulatorDto})
   update(@Param('id') id: string, @Body() updateSimulatorDto: UpdateSimulatorDto) {
