@@ -4,6 +4,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 
 const prismaMock = {
+  student: {
+    findFirst: jest.fn(),
+  },
   user: {
     findFirst: jest.fn(),
   },
@@ -44,6 +47,7 @@ describe('CourseService', () => {
     prismaMock.user.findFirst.mockClear();
     prismaMock.course.create.mockClear();
     prismaMock.course.findMany.mockClear();
+    prismaMock.course.update.mockClear();
   });
 
   it('should create course and return it', async () => {
@@ -208,6 +212,7 @@ describe('CourseService', () => {
       prerequisiteCompetencies: [],
       improvingCompetencies: []
     };
+    prismaMock.student.findFirst.mockResolvedValue(true);
     prismaMock.course.update.mockResolvedValue(updatedCourse);
     const result = await service.update(courseId, updateCourseDto);
 
@@ -235,6 +240,42 @@ describe('CourseService', () => {
       },
     });
   });
+
+  it('should update course without studentId', async () => {
+    const courseId = 'courseId1';
+    const updateCourseDto = { name: 'course1', studentId: '' };
+    const updatedCourse = {
+        id: courseId,
+        name: 'course1',
+        startDate: "string",
+        endDate: "string",
+        creatorId: "1",
+        prerequisiteCompetencies: [],
+        improvingCompetencies: []
+    };
+    
+    prismaMock.course.update.mockResolvedValue(updatedCourse);
+
+    const result = await service.update(courseId, updateCourseDto);
+
+    expect(result).toEqual(updatedCourse);
+    expect(prismaMock.course.update).toHaveBeenCalledTimes(1);
+    expect(prismaMock.course.update).toHaveBeenCalledWith({
+        where: { id: courseId },
+        data: {
+            name: updateCourseDto.name,
+            students: {},
+        },
+        include: {
+            improvingCompetencies: {
+                include: { competence: true },
+            },
+            prerequisiteCompetencies: {
+                include: { competence: true },
+            },
+        },
+    });
+});
 
   // it('should remove student from course and update course',async () => {
   //   const courseId = 'courseId1';

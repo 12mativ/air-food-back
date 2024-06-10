@@ -108,6 +108,14 @@ export class CourseService {
   async update(id: string, updateCourseDto: UpdateCourseDto) {
     const { name, studentId } = updateCourseDto;
     const students = studentId ? { connect: { id: studentId } } : {};
+    if (studentId) {
+      const currentStudent = await this.prisma.student.findFirst({
+        where: { id: studentId },
+      });
+      if (!currentStudent) {
+        throw new BadRequestException('Студента с таким id не существует');
+      }
+    }
 
     const updateCourse = await this.prisma.course.update({
       where: {
