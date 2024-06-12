@@ -7,12 +7,26 @@ import { UpdateSimulatorDto } from './dto/update-simulator.dto';
 
 @Injectable()
 export class SimulatorService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createSimulatorDto: CreateSimulatorDto) {
+    const { name, eventId } = createSimulatorDto;
+
+    const currentEvent = await this.prisma.event.findFirst({
+      where: { id: eventId },
+    });
+    if (!currentEvent) {
+      throw new BadRequestException('События с таким id не существует');
+    }
+    
     const createdSimulator = await this.prisma.simulator.create({
       data: {
-        ...createSimulatorDto,
+        name,
+        events: {
+          connect: {
+            id: eventId,
+          },
+        },
       },
     });
     return createdSimulator;
@@ -75,6 +89,21 @@ export class SimulatorService {
     };
 
     return payload;
+  }
+
+  async findSimulatorsOnCourse(courseId: string) {
+
+    const simulators = await this.prisma.simulator.findMany({
+      where: {
+        events: {
+          every: {
+            courseId: courseId,
+          },
+        },
+      },
+    });
+
+    return simulators;
   }
 
   async update(id: string, updateSimulatorDto: UpdateSimulatorDto) {
