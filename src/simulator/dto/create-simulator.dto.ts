@@ -5,4 +5,8 @@ export class CreateSimulatorDto {
     @IsString()
     @ApiProperty()
     name: string;
+
+    @ApiProperty()
+    @IsString()
+    eventId: string;
 }
