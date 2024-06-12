@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateSimulatorDto } from './create-simulator.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
-export class UpdateSimulatorDto extends PartialType(CreateSimulatorDto) {}
+export class UpdateSimulatorDto {
+  @IsString()
+  @ApiProperty()
+  name: string;
+}
