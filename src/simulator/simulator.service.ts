@@ -10,89 +10,84 @@ export class SimulatorService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createSimulatorDto: CreateSimulatorDto) {
-    const { name, eventId } = createSimulatorDto;
+    const { name, courseId } = createSimulatorDto;
 
-    const currentEvent = await this.prisma.event.findFirst({
-      where: { id: eventId },
+    const currentCourse = await this.prisma.course.findFirst({
+      where: { id: courseId },
     });
-    if (!currentEvent) {
-      throw new BadRequestException('События с таким id не существует');
+    if (!currentCourse) {
+      throw new BadRequestException('Курса с таким id не существует');
     }
     
     const createdSimulator = await this.prisma.simulator.create({
       data: {
         name,
-        events: {
-          connect: {
-            id: eventId,
-          },
-        },
+        courseId
       },
     });
     return createdSimulator;
   }
 
-  async findSimulators(
-    simulatorForSearch: string,
-    page: number,
-    limit: number,
-  ): Promise<ResGetSimulatorsDto> {
-    let simulatorsTotalAmount;
-    let simulators;
+  // async findSimulators(
+  //   simulatorForSearch: string,
+  //   page: number,
+  //   limit: number,
+  // ): Promise<ResGetSimulatorsDto> {
+  //   let simulatorsTotalAmount;
+  //   let simulators;
 
-    page = page ? page : 1;
-    limit = limit ? limit : 10;
+  //   page = page ? page : 1;
+  //   limit = limit ? limit : 10;
 
-    if (simulatorForSearch) {
-      simulatorsTotalAmount = await this.prisma.simulator.count({
-        where: {
-          OR: [
-            {
-              name: {
-                contains: simulatorForSearch,
-              },
-            },
-          ],
-        },
-      });
+  //   if (simulatorForSearch) {
+  //     simulatorsTotalAmount = await this.prisma.simulator.count({
+  //       where: {
+  //         OR: [
+  //           {
+  //             name: {
+  //               contains: simulatorForSearch,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     });
 
-      simulators = await this.prisma.simulator.findMany({
-        where: {
-          OR: [
-            {
-              name: {
-                contains: simulatorForSearch,
-              },
-            },
-          ],
-        },
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: {
-          id: 'asc',
-        },
-      });
-    } else {
-      simulatorsTotalAmount = await this.prisma.simulator.count();
-      simulators = await this.prisma.simulator.findMany({
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: {
-          id: 'asc',
-        },
-      });
-    }
+  //     simulators = await this.prisma.simulator.findMany({
+  //       where: {
+  //         OR: [
+  //           {
+  //             name: {
+  //               contains: simulatorForSearch,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //       skip: (page - 1) * limit,
+  //       take: limit,
+  //       orderBy: {
+  //         id: 'asc',
+  //       },
+  //     });
+  //   } else {
+  //     simulatorsTotalAmount = await this.prisma.simulator.count();
+  //     simulators = await this.prisma.simulator.findMany({
+  //       skip: (page - 1) * limit,
+  //       take: limit,
+  //       orderBy: {
+  //         id: 'asc',
+  //       },
+  //     });
+  //   }
 
-    const payload = {
-      simulators: simulators,
-      simulatorsTotalAmount: simulatorsTotalAmount,
-    };
+  //   const payload = {
+  //     simulators: simulators,
+  //     simulatorsTotalAmount: simulatorsTotalAmount,
+  //   };
 
-    return payload;
-  }
+  //   return payload;
+  // }
 
   async findSimulatorsOnCourse(courseId: string) {
-
     const simulators = await this.prisma.simulator.findMany({
       where: {
         events: {
@@ -106,6 +101,19 @@ export class SimulatorService {
     return simulators;
   }
 
+  async findSimulatorsOnEvent(eventId: string) {
+    const simulators = await this.prisma.event.findMany({
+      where: {
+        id: eventId
+      },
+      select: {
+        simulators: true
+      }
+    })
+
+    return simulators;
+  }
+
   async update(id: string, updateSimulatorDto: UpdateSimulatorDto) {
     const { name } = updateSimulatorDto;
     try {
@@ -114,7 +122,6 @@ export class SimulatorService {
           id,
         },
         data: {
-          id,
           name,
         },
       });

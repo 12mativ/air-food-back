@@ -31,27 +31,35 @@ export class SimulatorController {
     return this.simulatorService.create(createSimulatorDto);
   }
 
-  @Get()
+  // @Get()
+  // @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  // @ApiOkResponse({ type: ResGetSimulatorsDto, isArray: true })
+  // @ApiQuery({ name: 'page' })
+  // @ApiQuery({ name: 'limit' })
+  // findSimulatorForSearch(
+  //   @Query('simulatorForSearch') simulatorForSearch: string,
+  //   @Query('page') page: PageRequestDto,
+  //   @Query('limit') limit: LimitRequestDto,
+  // ): Promise<ResGetSimulatorsDto> {
+  //   return this.simulatorService.findSimulators(
+  //     simulatorForSearch,
+  //     +page,
+  //     +limit,
+  //   );
+  // }
+
+  @Get(':courseId')
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  @ApiOkResponse({ type: ResGetSimulatorsDto, isArray: true })
-  @ApiQuery({ name: 'page' })
-  @ApiQuery({ name: 'limit' })
-  findSimulatorForSearch(
-    @Query('simulatorForSearch') simulatorForSearch: string,
-    @Query('page') page: PageRequestDto,
-    @Query('limit') limit: LimitRequestDto,
-  ): Promise<ResGetSimulatorsDto> {
-    return this.simulatorService.findSimulators(
-      simulatorForSearch,
-      +page,
-      +limit,
-    );
+  @ApiOkResponse({ type: ResGetSimulatorDto, isArray: true })
+  findSimulatorsOnCourse(@Param('courseId') courseId: string) {
+    return this.simulatorService.findSimulatorsOnCourse(courseId);
   }
 
-  @Get(':id')
+  @Get(':eventId')
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  findSimulatorsOnCourse(@Param('id') id: string) {
-    return this.simulatorService.findSimulatorsOnCourse(id);
+  @ApiOkResponse({ type: ResGetSimulatorDto, isArray: true })
+  findSimulatorsOnEvent(@Param('eventId') eventId: string) {
+    return this.simulatorService.findSimulatorsOnEvent(eventId);
   }
 
   @Patch(':id')

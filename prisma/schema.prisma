@@ -43,6 +43,7 @@ model Course {
   prerequisiteCompetencies CourseCompetenceCharacteristic[]
   improvingCompetencies    ImprovingCompetence[]
   events                   Event[]
+  simulators Simulator[]
   creator                  User?                               @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 }
 
@@ -117,7 +118,9 @@ model Coach {
 model Simulator {
   id   String @id @default(uuid())
   name String @db.Text
+  courseId String  @db.Text
 
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)  
   events  Event[]
   coaches Coach[]
 }

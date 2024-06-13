@@ -8,5 +8,5 @@ export class CreateSimulatorDto {
 
     @ApiProperty()
     @IsString()
-    eventId: string;
+    courseId: string;
 }
