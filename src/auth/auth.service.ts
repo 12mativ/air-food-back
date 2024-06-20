@@ -35,7 +35,10 @@ export class AuthService {
     const student = roles.includes(Role.STUDENT)
       ? {
         create: {
-          email: email
+          email: email,
+          schedule: {
+            create: {}
+          }
         }
       }
       : {}
@@ -43,7 +46,7 @@ export class AuthService {
     const coach = roles.includes(Role.COACH)
       ? {
         create: {
-          email: email
+          email: email,
         }
       }
       : {}
@@ -54,8 +57,8 @@ export class AuthService {
         password: await bcrypt.hash(password, 10),
         roles: roles,
         student: student,
-        coach: coach
-      }
+        coach: coach,
+      },
     })
 
     const payload = { sub: newUser.id, email: newUser.email, roles: newUser.roles };

@@ -26,9 +26,11 @@ model Student {
   lastName   String? @db.Text
   birthDate  String? @db.Text
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schedule       Schedule    @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 
   competences StudentCompetenceCharacteristic[]
   userId      String                               @unique
+  scheduleId      String                               @unique
   courses     Course[]
 }
 
@@ -123,4 +125,31 @@ model Simulator {
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)  
   events  Event[]
   coaches Coach[]
+}
+
+model Schedule {
+  id     String  @id @default(uuid())
+  times  Times[]
+  student Student?
+}
+
+model Times {
+  id              String        @id @default(uuid())
+  day    Days
+  time            Decimal[]
+  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  scheduleId String @unique
+
+  @@unique([scheduleId, day])
+  @@unique([day, time])
+}
+
+enum Days {
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+  sunday
 }

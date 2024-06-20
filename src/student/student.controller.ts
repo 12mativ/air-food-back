@@ -41,7 +41,6 @@ export class StudentController {
     return this.studentService.getStudentsOnCourse(courseId)
   }
 
-
   @Roles(Role.ADMIN)
   @Patch(':id')
   @ApiOkResponse({type: ResGetStudentDto})

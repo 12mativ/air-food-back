@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsOptional, IsString } from 'class-validator';
 import { ResGetStudentCompetenceCharacteristicDto } from '../../student-competence-characteristic/dto/res-get-student-competence-characteristic.dto';
+import { ResGetSchedule } from './res-get-schedule.dto';
 
 class CourseForStudentDto {
   @IsString()
@@ -58,6 +59,9 @@ export class ResGetStudentDto {
   @ApiProperty()
   @IsString()
   userId: string;
+
+  @ApiProperty({type: ResGetSchedule})
+  schedule: ResGetSchedule
 
   @ApiProperty({
     type: ResGetStudentCompetenceCharacteristicDto,
