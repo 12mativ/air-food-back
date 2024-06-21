@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { ReqUpdateTimesDto } from './req-update-times.dto';
+import { Type } from 'class-transformer';
 
 export class UpdateStudentRequestDto {
   @ApiProperty()
@@ -24,6 +25,9 @@ export class UpdateStudentRequestDto {
   birthDate?: string;
 
   @ApiProperty({ type: ReqUpdateTimesDto, isArray: true })
+  @IsArray()
+  @ValidateNested()
+  @Type(() => ReqUpdateTimesDto)
   @IsOptional()
   times?: ReqUpdateTimesDto[];
 }
