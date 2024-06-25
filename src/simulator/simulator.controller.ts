@@ -35,7 +35,7 @@ export class SimulatorController {
     return this.simulatorService.findSimulators(simulatorForSearch, +page, +limit);
   }
 
-  @Get(':id')
+  @Get('/get-on-course/:id')
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   findSimulatorsOnCourse(@Param('id') id: string) {
     return this.simulatorService.findSimulatorsOnCourse(id);
