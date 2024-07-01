@@ -12,10 +12,6 @@ export class SimulatorService {
   async create(createSimulatorDto: CreateSimulatorDto) {
     const { name, courseId } = createSimulatorDto;
 
-    if (!name || name.length < 1) {
-      throw new BadRequestException('Имя тренажера должно содержать хотя бы один символ');
-    }
-
     const currentCourse = await this.prisma.course.findFirst({
       where: { id: courseId },
     });

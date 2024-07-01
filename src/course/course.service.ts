@@ -23,10 +23,6 @@ export class CourseService {
         email: decodedJwt.email,
       },
     });
-    
-    if (!createCourseDto.name || createCourseDto.name.length < 1) {
-      throw new BadRequestException('Имя курса должно содержать хотя бы один символ');
-    }
 
     const createdCourse = await this.prisma.course.create({
       data: {
