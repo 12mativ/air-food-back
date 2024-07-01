@@ -16,9 +16,6 @@ export class EventService {
   ) {}
 
   async create(createEventDto: CreateEventDto) {
-    if (!createEventDto.name || createEventDto.name.length < 1) {
-      throw new BadRequestException('Имя мероприятия должно содержать хотя бы один символ');
-    }
     const course = await this.prisma.course.findFirst({
       where: {
         id: createEventDto.courseId,
