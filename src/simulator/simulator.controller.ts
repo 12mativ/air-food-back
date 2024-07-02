@@ -41,6 +41,12 @@ export class SimulatorController {
     return this.simulatorService.findSimulatorsOnCourse(id);
   }
 
+  @Get('/get-on-event/:id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
+  findSimulatorsOnEvent(@Param('id') id: string) {
+    return this.simulatorService.findSimulatorsOnEvent(id);
+  }
+
   @Patch(':id')
   @ApiOkResponse({type: ResGetSimulatorDto})
   update(@Param('id') id: string, @Body() updateSimulatorDto: UpdateSimulatorDto) {
