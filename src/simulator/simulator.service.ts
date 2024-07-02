@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-
 import { CreateSimulatorDto } from './dto/create-simulator.dto';
 import { ResGetSimulatorsDto } from './dto/res-get-simulators.dto';
 import { UpdateSimulatorDto } from './dto/update-simulator.dto';
