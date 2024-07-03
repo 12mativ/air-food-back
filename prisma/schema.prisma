@@ -97,8 +97,10 @@ model Event {
   startDate String @db.Text
   endDate   String @db.Text
   courseId  String 
-
+  curriculumId String
+ 
   course             Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  curriculum Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
   coaches            Coach[]
   simulators         Simulator[]
 }
@@ -142,6 +144,11 @@ model Times {
 
   @@unique([scheduleId, day])
   @@unique([day, time])
+}
+
+model Curriculum {
+  id              String        @id @default(uuid())
+  cirriculumEvents Event[]
 }
 
 enum Days {
