@@ -26,6 +26,10 @@ export class EventService {
       throw new BadRequestException('Курса с таким id не существует');
     }
 
+    if(new Date(createEventDto.startDate) > new Date(createEventDto.endDate)){
+      throw new BadRequestException('Дата начала больше даты окончания');
+    }
+    
     const createdEvent = await this.prisma.event.create({
       data: {
         name: createEventDto.name,

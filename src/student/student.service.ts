@@ -118,6 +118,10 @@ export class StudentService {
   async updateStudent(id: string, updateStudentDto: UpdateStudentRequestDto) {
     const { firstName, lastName, middleName, birthDate } = updateStudentDto;
 
+    if(new Date(birthDate) > new Date()){
+      throw new BadRequestException('Дата рождения больше текущей даты');
+    }
+
     try {
       const updatedStudent = await this.prisma.student.update({
         where: {
