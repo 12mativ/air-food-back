@@ -48,18 +48,16 @@ export class SimulatorController {
   //   );
   // }
 
-  @Get(':courseId')
+  @Get('/get-on-course/:id')
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  @ApiOkResponse({ type: ResGetSimulatorDto, isArray: true })
-  findSimulatorsOnCourse(@Param('courseId') courseId: string) {
-    return this.simulatorService.findSimulatorsOnCourse(courseId);
+  findSimulatorsOnCourse(@Param('id') id: string) {
+    return this.simulatorService.findSimulatorsOnCourse(id);
   }
 
-  @Get(':eventId')
+  @Get('/get-on-event/:id')
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  @ApiOkResponse({ type: ResGetSimulatorDto, isArray: true })
-  findSimulatorsOnEvent(@Param('eventId') eventId: string) {
-    return this.simulatorService.findSimulatorsOnEvent(eventId);
+  findSimulatorsOnEvent(@Param('id') id: string) {
+    return this.simulatorService.findSimulatorsOnEvent(id);
   }
 
   @Patch(':id')

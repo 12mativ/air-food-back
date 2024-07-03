@@ -137,54 +137,30 @@ export class StudentService {
     const { firstName, lastName, middleName, birthDate, times } =
       updateStudentDto;
 
-    const currentStudent = await this.prisma.student.findFirst({
-      where: {
-        id
-      }
-    })
-
-    if (!currentStudent) {
-      throw new BadRequestException("Студента с таким id не существует")
+    if (new Date(birthDate) > new Date()) {
+      throw new BadRequestException('Дата рождения больше текущей даты');
     }
 
-    const updatedStudent = await this.prisma.student.update({
+    const currentStudent = await this.prisma.student.findFirst({
       where: {
         id,
       },
-      data: {
-        firstName,
-        middleName,
-        lastName,
-        birthDate,
-      },
-      include: {
-        courses: true,
-        schedule: {
-          include: {
-            times: true,
-          },
-        },
-      },
     });
 
-    if (times) {
-      await this.prisma.times.deleteMany({
-        where: {
-          scheduleId: updatedStudent.scheduleId,
-        },
-      });
+    if (!currentStudent) {
+      throw new BadRequestException('Студента с таким id не существует');
+    }
 
-      await this.prisma.times.createMany({
-        data: times.map((t) => ({
-          day: t.day,
-          time: t.time,
-          scheduleId: updatedStudent.scheduleId,
-        })),
-      });
-
-      return await this.prisma.student.findFirst({
+    try {
+      const updatedStudent = await this.prisma.student.update({
         where: {
           id,
+        },
+        data: {
+          firstName,
+          middleName,
+          lastName,
+          birthDate,
         },
         include: {
           courses: true,
@@ -195,8 +171,42 @@ export class StudentService {
           },
         },
       });
-    }
 
-    return updatedStudent;
+      if (times) {
+        await this.prisma.times.deleteMany({
+          where: {
+            scheduleId: updatedStudent.scheduleId,
+          },
+        });
+
+        await this.prisma.times.createMany({
+          data: times.map((t) => ({
+            day: t.day,
+            time: t.time,
+            scheduleId: updatedStudent.scheduleId,
+          })),
+        });
+
+        return await this.prisma.student.findFirst({
+          where: {
+            id,
+          },
+          include: {
+            courses: true,
+            schedule: {
+              include: {
+                times: true,
+              },
+            },
+          },
+        });
+      }
+
+      return updatedStudent;
+    } catch (e) {
+      throw new BadRequestException(
+        'Произошла ошибка при обновлении данных обучающегося.',
+      );
+    }
   }
 }
