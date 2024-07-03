@@ -29,7 +29,7 @@ export class EventService {
     if(new Date(createEventDto.startDate) > new Date(createEventDto.endDate)){
       throw new BadRequestException('Дата начала больше даты окончания');
     }
-    
+
     const createdEvent = await this.prisma.event.create({
       data: {
         name: createEventDto.name,
@@ -135,6 +135,39 @@ export class EventService {
         endDate,
         coaches: coaches,
         simulators: simulators,
+      },
+    });
+
+    const course = await this.prisma.course.findFirst({
+      where: {
+        id: updatedEvent.courseId,
+      },
+    });
+
+    const dates = { startDate: null, endDate: null };
+    if (course.startDate == null && course.endDate == null) {
+      dates.startDate = updatedEvent.startDate;
+      dates.endDate = updatedEvent.endDate;
+    } else {
+      if (new Date(updatedEvent.startDate) < new Date(course.startDate)) {
+        dates.startDate = updatedEvent.startDate;
+      } else {
+        dates.startDate = course.startDate;
+      }
+      if (new Date(updatedEvent.endDate) > new Date(course.endDate)) {
+        dates.endDate = updatedEvent.endDate;
+      } else {
+        dates.endDate = course.endDate;
+      }
+    }
+
+    await this.prisma.course.update({
+      where: {
+        id: updatedEvent.courseId,
+      },
+      data: {
+        startDate: dates.startDate,
+        endDate: dates.endDate,
       },
     });
 
