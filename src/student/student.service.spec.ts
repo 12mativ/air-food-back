@@ -44,6 +44,7 @@ describe('StudentService', () => {
     const result = await service.getStudentsOnCourse(courseId);
 
     expect(result).toEqual(students);
+    expect(prismaMock.course.findFirst).toHaveBeenCalledTimes(1);
     expect(prismaMock.course.findFirst).toHaveBeenCalledWith({
       where: { id: courseId },
       select: {
@@ -73,36 +74,30 @@ describe('StudentService', () => {
 
     prismaMock.student.update.mockResolvedValue({updatedStudent});
 
-    prismaMock.times.createMany.mockResolvedValue(null);
-
     const result = await service.updateStudent(id, dto);
 
     expect(result).toEqual({updatedStudent});
+    expect(prismaMock.student.findFirst).toHaveBeenCalledTimes(2);
+    expect(prismaMock.student.update).toHaveBeenCalledTimes(1);
+    expect(prismaMock.times.deleteMany).toHaveBeenCalledTimes(1);
+    expect(prismaMock.times.createMany).toHaveBeenCalledTimes(1);
     expect(prismaMock.student.findFirst).toHaveBeenCalledWith({
       where: { id },
     });
-    // expect(prismaMock.student.update).toHaveBeenCalledWith({
-    //   where: { id },
-    //   data: {
-    //     firstName: dto.firstName,
-    //     middleName: dto.middleName,
-    //     lastName: dto.lastName,
-    //     birthDate: dto.birthDate,
-    //   },
-    //   include: {
-    //     courses: true,
-    //     schedule: {
-    //       include: { times: true },
-    //     },
-    //   },
-    // });
-
-    // expect(prismaMock.times.deleteMany).toHaveBeenCalledWith({
-    //   where: { scheduleId: 'schedule1' },
-    // });
-
-    // expect(prismaMock.times.createMany).toHaveBeenCalledWith({
-    //   data: [{ day: Days.monday, time: [new Decimal(10)], scheduleId: 'schedule1' }],
-    // });
+    expect(prismaMock.student.update).toHaveBeenCalledWith({
+      where: { id },
+      data: {
+        firstName: dto.firstName,
+        middleName: dto.middleName,
+        lastName: dto.lastName,
+        birthDate: dto.birthDate,
+      },
+      include: {
+        courses: true,
+        schedule: {
+          include: { times: true },
+        },
+      },
+    });
   });
 });

@@ -3,7 +3,7 @@ import { SimulatorService } from './simulator.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
-const prismaMock ={
+const prismaMock = {
   simulator: {
     create: jest.fn(),
     findMany: jest.fn(),
@@ -17,26 +17,21 @@ const prismaMock ={
   event: {
     findMany: jest.fn(),
   },
-}
-const jwtMock = {
-  decode: jest.fn(),
 };
+
 describe('SimulatorService', () => {
   let service: SimulatorService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [PrismaModule],
-      providers: [ 
+      imports:[PrismaModule],
+      providers: [
         SimulatorService,
         {
           provide: PrismaService,
           useValue: prismaMock,
         },
-        {
-          provide: JwtService,
-          useValue: jwtMock,
-        },],
+      ],
     }).compile();
 
     service = module.get<SimulatorService>(SimulatorService);
@@ -59,6 +54,7 @@ describe('SimulatorService', () => {
       },
     });
   });
+
   it('should return simulators for a course', async () => {
     const courseId = 'course1';
     const simulators = [{ id: 'sim1', name: 'Simulator 1' }];
@@ -77,9 +73,10 @@ describe('SimulatorService', () => {
       },
     });
   });
+
   it('should return simulators for an event', async () => {
     const eventId = 'event1';
-    const simulators = [{ id: 'sim1', name: 'Simulator 1' }];
+    const simulators = [{ id: 'sim1' }];
     prismaMock.event.findMany.mockResolvedValue([{ simulators }]);
 
     const result = await service.findSimulatorsOnEvent(eventId);
@@ -94,10 +91,11 @@ describe('SimulatorService', () => {
       },
     });
   });
+
   it('should update a simulator', async () => {
     const id = 'sim1';
     const dto = { name: 'Updated Simulator' };
-    const updatedSimulator = { id, name: 'Updated Simulator' };
+    const updatedSimulator = { id, ...dto };
     prismaMock.simulator.update.mockResolvedValue(updatedSimulator);
 
     const result = await service.update(id, dto);
@@ -108,10 +106,11 @@ describe('SimulatorService', () => {
       data: { name: 'Updated Simulator' },
     });
   });
+
   it('should remove a simulator', async () => {
     const id = 'sim1';
-    prismaMock.simulator.findFirst.mockResolvedValue({ id: 'sim1' });
-    prismaMock.simulator.delete.mockResolvedValue({ id: 'sim1' });
+    prismaMock.simulator.findFirst.mockResolvedValue({ id });
+    prismaMock.simulator.delete.mockResolvedValue({ id });
 
     await service.remove(id);
 
