@@ -100,20 +100,20 @@ export class SimulatorService {
 
     return simulators;
   }
-
   async findSimulatorsOnEvent(eventId: string) {
-    const simulators = await this.prisma.event.findMany({
+
+    const simulators = await this.prisma.simulator.findMany({
       where: {
-        id: eventId
+        events: {
+          every: {
+            id: eventId,
+          },
+        },
       },
-      select: {
-        simulators: true
-      }
-    })
+    });
 
     return simulators;
   }
-
   async update(id: string, updateSimulatorDto: UpdateSimulatorDto) {
     const { name } = updateSimulatorDto;
     try {
