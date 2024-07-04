@@ -271,6 +271,49 @@ export class EventService {
       throw new BadRequestException('Мероприятия с таким id не существует');
     }
 
+    const course = await this.prisma.course.findFirst({
+      where: {
+        id: event.courseId,
+      },
+    });
+
+    if (course.startDate == event.startDate || course.endDate == event.endDate) {
+
+      const events = await this.prisma.event.findMany({
+        where: {
+          courseId: event.courseId,
+           NOT: {
+            id,
+           }
+        },
+      });
+
+      const dates = { startDate: null, endDate: null };
+
+      events.forEach((currentEvent)=> {
+  
+        if (new Date(currentEvent.startDate) < new Date(dates.startDate) || dates.startDate == null) {
+          dates.startDate = currentEvent.startDate;
+        }
+        if (new Date(currentEvent.endDate) < new Date(dates.endDate) || dates.endDate == null) {
+          dates.endDate = currentEvent.endDate;
+        }
+
+      });
+  
+      await this.prisma.course.update({
+        where: {
+          id: event.courseId,
+        },
+        data: {
+          startDate: dates.startDate,
+          endDate: dates.endDate,
+        },
+      });
+    };
+
+
+
     await this.prisma.event.delete({
       where: { id },
     });
