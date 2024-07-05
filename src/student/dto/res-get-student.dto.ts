@@ -67,7 +67,7 @@ export class ResGetStudentDto {
     type: ResGetStudentCompetenceCharacteristicDto,
     isArray: true,
   })
-  competences: ResGetStudentCompetenceCharacteristicDto[];
+  competencies: ResGetStudentCompetenceCharacteristicDto[];
 
   @ApiProperty({
     type: CourseForStudentDto,
