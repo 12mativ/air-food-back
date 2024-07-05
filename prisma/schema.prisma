@@ -53,27 +53,29 @@ model Competence {
   id   String @id @default(uuid())
   name String @db.Text
 
-  improvingCompetence                ImprovingCompetence?
-  competenceCharacteristicForCourse  CourseCompetenceCharacteristic?
-  competenceCharacteristicForStudent StudentCompetenceCharacteristic?
+  improvingCompetence                ImprovingCompetence[]
+  competenceCharacteristicForCourse  CourseCompetenceCharacteristic[]
+  competenceCharacteristicForStudent StudentCompetenceCharacteristic[]
 }
 
 model ImprovingCompetence {
   id             String @id @default(uuid())
   improvingValue Int    @default(0) @db.SmallInt
   
-  competenceId   String @unique
+  competenceId   String
   courseId     String
 
   course     Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)
+
+  @@unique([competenceId, courseId])
 }
 
 model StudentCompetenceCharacteristic {
   id         String @id @default(uuid())
   scaleValue Int    @db.SmallInt
 
-  competenceId String  @unique
+  competenceId String
   studentId    String?
 
   student    Student?   @relation(fields: [studentId], references: [id], onDelete: Cascade)
@@ -84,7 +86,7 @@ model CourseCompetenceCharacteristic {
   id         String @id @default(uuid())
   scaleValue Int    @db.SmallInt
 
-  competenceId String  @unique
+  competenceId String 
   courseId     String?
 
   course     Course?    @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -97,10 +99,10 @@ model Event {
   startDate String @db.Text
   endDate   String @db.Text
   courseId  String 
-  curriculumId String
+  curriculumId String?
  
   course             Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  curriculum Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
+  curriculum Curriculum? @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
   coaches            Coach[]
   simulators         Simulator[]
 }
@@ -140,7 +142,7 @@ model Times {
   day    Days
   time            Decimal[]
   schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
-  scheduleId String @unique
+  scheduleId String
 
   @@unique([scheduleId, day])
   @@unique([day, time])

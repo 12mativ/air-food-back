@@ -7,6 +7,10 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CreateCurriculumDto {
   @ApiProperty({ type: ReqCreateStudentCompetenceCharacteristicDto, isArray: true })
   @IsArray()
+  currentCompetencies:  ReqCreateStudentCompetenceCharacteristicDto[]
+
+  @ApiProperty({ type: ReqCreateStudentCompetenceCharacteristicDto, isArray: true })
+  @IsArray()
   expectedCompetencies: ReqCreateStudentCompetenceCharacteristicDto[]
   
   @ApiProperty({ type: ReqUpdateTimesDto, isArray: true })

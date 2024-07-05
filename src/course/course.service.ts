@@ -47,6 +47,16 @@ export class CourseService {
     return createdCourse;
   }
 
+  async findOneCourse(id: string) {
+    const course = await this.prisma.course.findFirst({
+      where: {
+        id
+      }
+    })
+
+    return course;
+  }
+
   async findAll() {
     const courses = await this.prisma.course.findMany({
       include: {

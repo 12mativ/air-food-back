@@ -47,6 +47,13 @@ export class CourseController {
     return this.courseService.findAllForUser(jwt);
   }
 
+  @Get(':id')
+  @Roles(Role.ADMIN, Role.COURSE_ORGANISER, Role.STUDENT, Role.COACH)
+  @ApiOkResponse({ type: ResGetCourseDto })
+  findOneCourse(@Param('id') id: string) {
+    return this.courseService.findOneCourse(id);
+  }
+
   @Patch(':id')
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
   @ApiOkResponse({ type: ResGetCourseDto })

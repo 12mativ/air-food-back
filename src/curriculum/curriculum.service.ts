@@ -9,25 +9,34 @@ export class CurriculumService {
   async create(createCurriculumDto: CreateCurriculumDto) {
     const expectedCompetenciesIds = createCurriculumDto.expectedCompetencies.map(ec => ec.competenceId)
     let firstStageCoursesCandidates = []
+    // поиск всех курсов которые прокачивают нужные нам компетнеции
     const courses = await this.prisma.course.findMany({
       where: {
         improvingCompetencies: {
           some: {
-            AND: [
-              {
-                competenceId: {in: expectedCompetenciesIds}
-              },
-              {
-                improvingValue: {
-                  //todo чтоб еще значение увеличивающее было таким чтоб сложить его с текущим и оно получилось не меньше нужного scaleValue...
-                  //gte:
-                }
-              }
-            ]
+            competenceId: {in: expectedCompetenciesIds}
           }
         }
+      },
+      include: {
+        improvingCompetencies: true
       }
     })
+
+    // поиск курсов которые достаточно прокачивают нужные нам компетенции
+    courses.forEach(c => {
+      c.improvingCompetencies.forEach(ic => {
+        if (expectedCompetenciesIds.includes(ic.competenceId)) {
+          const currentCompetency = createCurriculumDto.currentCompetencies.find(cc => cc.competenceId === ic.competenceId)
+          const expectedCompetency = createCurriculumDto.expectedCompetencies.find(ec => ec.competenceId === ic.competenceId)
+          if (ic.improvingValue + currentCompetency.scaleValue >= expectedCompetency.scaleValue) {
+            firstStageCoursesCandidates.push(c)
+          }
+        }
+      })
+    })
+
+    console.log('==================f', firstStageCoursesCandidates, "=======================")
   }
 
   findOne(id: number) {
