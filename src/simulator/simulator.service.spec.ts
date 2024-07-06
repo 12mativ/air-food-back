@@ -3,6 +3,8 @@ import { SimulatorService } from './simulator.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { CreateCourseDto } from '../course/dto/req-create-course.dto';
+import { CreateSimulatorDto } from './dto/create-simulator.dto';
 const prismaMock = {
   simulator: {
     create: jest.fn(),
@@ -39,13 +41,15 @@ describe('SimulatorService', () => {
   });
 
   it('should create a simulator', async () => {
-    const dto = { name: 'Test Simulator', courseId: 'course1' };
+    const dto: CreateSimulatorDto = { name: 'Test Simulator', courseId: 'course1' };
     prismaMock.course.findFirst.mockResolvedValue({ id: 'course1' });
     prismaMock.simulator.create.mockResolvedValue({ id: 'sim1', ...dto });
 
     const result = await service.create(dto);
 
     expect(result).toEqual({ id: 'sim1', ...dto });
+    expect(prismaMock.course.findFirst).toHaveBeenCalledTimes(1);
+    expect(prismaMock.simulator.create).toHaveBeenCalledTimes(1)
     expect(prismaMock.course.findFirst).toHaveBeenCalledWith({ where: { id: 'course1' } });
     expect(prismaMock.simulator.create).toHaveBeenCalledWith({
       data: {

@@ -4,6 +4,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { PrismaService } from '../prisma/prisma.service';
 import { Days, Prisma } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
+import { UpdateStudentRequestDto } from './dto/req-update-student.dto';
 const prismaMock = {
   student: {
     count: jest.fn(),
@@ -58,7 +59,7 @@ describe('StudentService', () => {
   });
   it('should update students', async () => {
     const id = '1';
-    const dto = {
+    const dto: UpdateStudentRequestDto = {
       firstName: 'Updated',
       lastName: 'Student',
       middleName: 'Middle',

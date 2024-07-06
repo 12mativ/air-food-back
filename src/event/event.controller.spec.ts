@@ -22,6 +22,10 @@ describe('EventController', () => {
     controller = module.get<EventController>(EventController);
     eventService = module.get<EventService>(EventService);
   });
+  
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('should create an event', async () => {
     const createDto: CreateEventDto = {
