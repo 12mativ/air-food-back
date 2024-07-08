@@ -1,5 +1,19 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
+
+export class ResGetTime {
+  @IsString()
+  @ApiProperty()
+  id: string;
+
+  @IsNumber()
+  @ApiProperty()
+  startTime: number;
+
+  @IsNumber()
+  @ApiProperty()
+  endTime: number;
+}
 
 export class ResGetTimes {
   @IsString()
@@ -10,9 +24,8 @@ export class ResGetTimes {
   @ApiProperty()
   day: string;
 
-  @IsNumber({},{each: true})
-  @ApiProperty({isArray: true})
-  time: number[];
+  @ApiProperty({type: ResGetTime, isArray: true})
+  time: ResGetTime[];
 
   @IsString()
   @ApiProperty()

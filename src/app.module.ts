@@ -11,6 +11,7 @@ import { EventModule } from './event/event.module';
 import { ImprovingCompetenceModule } from './improving-competence/improving-competence.module';
 import { StudentCompetenceCharacteristicModule } from './student-competence-characteristic/student-competence-characteristic.module';
 import { CourseCompetenceCharacteristicModule } from './course-competence-characteristic/course-competence-characteristic.module';
+import { CurriculumModule } from './curriculum/curriculum.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CourseCompetenceCharacteristicModule } from './course-competence-charac
     StudentCompetenceCharacteristicModule,
     StudentCompetenceCharacteristicModule,
     CourseCompetenceCharacteristicModule,
+    CurriculumModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
