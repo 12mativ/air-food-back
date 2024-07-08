@@ -11,10 +11,19 @@ const prismaMock ={
   },
   event: {
     create: jest.fn(),
+    findFirst: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
   },
   user: {
     findFirst: jest.fn(),
-  }
+  },
+  coach: {
+    findFirst: jest.fn(),
+  },
+  simulator: {
+    findFirst: jest.fn(),
+  },
 };
 
 const jwtMock = {
@@ -45,6 +54,9 @@ describe('EventService', () => {
     prismaMock.course.findFirst.mockClear();
     prismaMock.course.update.mockClear();
     prismaMock.event.create.mockClear();
+    prismaMock.event.findFirst.mockClear();
+    prismaMock.event.update.mockClear();
+    prismaMock.event.delete.mockClear();
   });
 
   it('should create event and return it', async () => {
@@ -124,5 +136,126 @@ describe('EventService', () => {
         },
       },
     });
+  });
+
+  it('should update event', async () => {
+    const currentEvent = {
+      id: 'eventId',
+      name: 'event1',
+      startDate: 'date',
+      endDate: 'date',
+    };
+    const updatedEvent = {
+      ...currentEvent,
+      name: 'updatedEvent1',
+    };
+
+    prismaMock.event.findFirst.mockResolvedValue(currentEvent);
+    prismaMock.event.update.mockResolvedValue(updatedEvent);
+    prismaMock.coach.findFirst.mockResolvedValue({ id: 'coachId' });
+    prismaMock.simulator.findFirst.mockResolvedValue({ id: 'simulatorId' });
+    const updateEventDto = {
+      name: 'updatedEvent1',
+      startDate: 'date',
+      endDate: 'date',
+      coachId: 'coachId',
+      simulatorId: 'simulatorId',
+    };
+    const result = await service.update('eventId', updateEventDto);
+
+    expect(result).toEqual(updatedEvent);
+    expect(prismaMock.event.update).toHaveBeenCalledWith({
+      where: { id: 'eventId' },
+      data: {
+        name: updateEventDto.name,
+        startDate: updateEventDto.startDate,
+        endDate: updateEventDto.endDate,
+        coaches: { connect: { id: updateEventDto.coachId } },
+        simulators: { connect: { id: updateEventDto.simulatorId } },
+      },
+    });
+  });
+  it('should disconnect coach from event', async () => {
+    const currentEvent = {
+      id: 'eventId',
+      coaches: [{ id: 'coachId' }],
+    };
+
+    prismaMock.event.findFirst.mockResolvedValue(currentEvent);
+    prismaMock.event.update.mockResolvedValue(currentEvent);
+
+    const updateEventDeleteCoachDto = {
+      coachId: 'coachId',
+    };
+
+    const result = await service.disconnectCoach('eventId', updateEventDeleteCoachDto);
+
+    expect(result).toEqual(currentEvent);
+    expect(prismaMock.event.update).toHaveBeenCalledWith({
+      where: { id: 'eventId' },
+      data: {
+        coaches: { disconnect: { id: updateEventDeleteCoachDto.coachId } },
+      },
+    });
+  });
+
+  it('should disconnect simulator from event', async () => {
+    const currentEvent = {
+      id: 'eventId',
+      simulators: [{ id: 'simulatorId' }],
+    };
+
+    prismaMock.event.findFirst.mockResolvedValue(currentEvent);
+    prismaMock.event.update.mockResolvedValue(currentEvent);
+
+    const updateEventDeleteSimulatorDto = {
+      simulatorId: 'simulatorId',
+    };
+
+    const result = await service.disconnectSimulator('eventId', updateEventDeleteSimulatorDto);
+
+    expect(result).toEqual(currentEvent);
+    expect(prismaMock.event.update).toHaveBeenCalledWith({
+      where: { id: 'eventId' },
+      data: {
+        simulators: { disconnect: { id: updateEventDeleteSimulatorDto.simulatorId } },
+      },
+    });
+  });
+  it('should disconnect simulator from event', async () => {
+    const currentEvent = {
+      id: 'eventId',
+      simulators: [{ id: 'simulatorId' }],
+    };
+
+    prismaMock.event.findFirst.mockResolvedValue(currentEvent);
+    prismaMock.event.update.mockResolvedValue(currentEvent);
+
+    const updateEventDeleteSimulatorDto = {
+      simulatorId: 'simulatorId',
+    };
+
+    const result = await service.disconnectSimulator('eventId', updateEventDeleteSimulatorDto);
+
+    expect(result).toEqual(currentEvent);
+    expect(prismaMock.event.update).toHaveBeenCalledWith({
+      where: { id: 'eventId' },
+      data: {
+        simulators: { disconnect: { id: updateEventDeleteSimulatorDto.simulatorId } },
+      },
+    });
+  });
+
+  it('should remove event', async () => {
+    const eventId = 'eventId1';
+
+    prismaMock.event.findFirst.mockResolvedValue({ id: eventId });
+    prismaMock.event.delete.mockResolvedValue({ id: eventId });
+
+    await service.remove(eventId);
+
+    expect(prismaMock.event.findFirst).toHaveBeenCalledTimes(1);
+    expect(prismaMock.event.delete).toHaveBeenCalledTimes(1);
+    expect(prismaMock.event.delete).toHaveBeenCalledWith({ where: { id: eventId } });
   });
 });

@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-
 import { JwtService } from '@nestjs/jwt';
 import { CreateCourseDto } from './dto/req-create-course.dto';
 import { UpdateCourseDto } from './dto/req-update-course.dto';

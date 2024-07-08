@@ -277,39 +277,38 @@ describe('CourseService', () => {
     });
 });
 
-  // it('should remove student from course and update course',async () => {
-  //   const courseId = 'courseId1';
-  //   const updateCourseDeleteStudentDto = {studentId: 'studentId1'};
-  //   const currentCourse = { id: courseId, students: [{ id: 'student1' }] };
-  //   const updatedCourse = {
-  //     id: courseId,
-  //     name: 'course1',
-  //     startDate: "string",
-  //     endDate: "string",
-  //     creatorId: "1",
-  //     prerequisiteCompetencies: [],
-  //     improvingCompetencies: [],
-  //     students: [],
-  //   };
-  //   prismaMock.course.findFirst
-  //   .mockResolvedValueOnce(currentCourse) // Для проверки существования курса
-  //   .mockResolvedValueOnce(currentCourse); // Для проверки существования студента на курсе
-  //   const result = await service.disconnectStudent(courseId, updateCourseDeleteStudentDto);
+  it('should remove student from course and update course',async () => {
+    const courseId = 'courseId1';
+    const updateCourseDeleteStudentDto = {studentId: 'studentId1'};
+    const currentCourse = { id: courseId, students: [{ id: 'student1' }] };
+    const updatedCourse = {
+      id: courseId,
+      name: 'course1',
+      startDate: "string",
+      endDate: "string",
+      creatorId: "1",
+      prerequisiteCompetencies: [],
+      improvingCompetencies: [],
+    };
+    prismaMock.course.findFirst
+    .mockResolvedValueOnce(currentCourse) // Для проверки существования курса
+    .mockResolvedValueOnce(currentCourse); // Для проверки существования студента на курсе
+    const result = await service.disconnectStudent(courseId, updateCourseDeleteStudentDto);
 
-  //   expect(result).toEqual(updatedCourse);
-  //   expect(prismaMock.course.findFirst).toHaveBeenCalledTimes(2);
-  //   expect(prismaMock.course.update).toHaveBeenCalledTimes(1);
-  //   expect(prismaMock.course.update).toHaveBeenCalledWith({
-  //     where: { id: courseId },
-  //     data: {
-  //       students: { disconnect: { id: updateCourseDeleteStudentDto.studentId } },
-  //     },
-  //     include: {
-  //       improvingCompetencies: { include: { competence: true } },
-  //       prerequisiteCompetencies: { include: { competence: true } },
-  //     },
-  //   });
-  // });
+    expect(result).toEqual(updatedCourse);
+    expect(prismaMock.course.findFirst).toHaveBeenCalledTimes(2);
+    expect(prismaMock.course.update).toHaveBeenCalledTimes(1);
+    expect(prismaMock.course.update).toHaveBeenCalledWith({
+      where: { id: courseId },
+      data: {
+        students: { disconnect: { id: updateCourseDeleteStudentDto.studentId } },
+      },
+      include: {
+        improvingCompetencies: { include: { competence: true } },
+        prerequisiteCompetencies: { include: { competence: true } },
+      },
+    });
+  });
 
   it('should remove course', async () => {
     const courseId = 'courseId1';

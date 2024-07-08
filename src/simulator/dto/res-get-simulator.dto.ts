@@ -9,4 +9,8 @@ export class ResGetSimulatorDto {
   @ApiProperty()
   @IsString()
   name: string;
+
+  @ApiProperty()
+  @IsString()
+  courseId: string;
 }
