@@ -140,12 +140,20 @@ model Schedule {
 model Times {
   id              String        @id @default(uuid())
   day    Days
-  time            Decimal[]
+  time            Time[]
   schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   scheduleId String
 
   @@unique([scheduleId, day])
-  @@unique([day, time])
+}
+
+model Time {
+  id              String        @id @default(uuid())
+  startTime Float 
+  endTime Float
+  timesId String
+
+  times Times @relation(fields: [timesId], references: [id], onDelete: Cascade)
 }
 
 model Curriculum {
