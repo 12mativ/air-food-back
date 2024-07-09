@@ -189,29 +189,29 @@ export class CurriculumService {
       finalEvents.push(...sc.events)
     })
     const studentId = createCurriculumDto.currentCompetencies[0].studentId;
-    await this.prisma.curriculum.create({
-      data: {
-        cirriculumEvents: {
-          createMany: {
-            data: finalEvents.map((fe) => {
+    // await this.prisma.curriculum.create({
+    //   data: {
+    //     cirriculumEvents: {
+    //       createMany: {
+    //         data: finalEvents.map((fe) => {
               
-            })
-          }
-        }
-      }
-    })
-    await this.prisma.student.update({
-      where: {
-        id: studentId
-      },
-      data: {
-        curriculum: {
-          connect: {
-            id: 
-          }
-        }
-      }
-    })
+    //         })
+    //       }
+    //     }
+    //   }
+    // })
+    // await this.prisma.student.update({
+    //   where: {
+    //     id: studentId
+    //   },
+    //   data: {
+    //     curriculum: {
+    //       connect: {
+    //         id: 
+    //       }
+    //     }
+    //   }
+    // })
 
     return finalEvents;
   }

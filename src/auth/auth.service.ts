@@ -38,6 +38,9 @@ export class AuthService {
           email: email,
           schedule: {
             create: {}
+          },
+          curriculum: {
+            create: {}
           }
         }
       }

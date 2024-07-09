@@ -151,16 +151,54 @@ export class StudentService {
       throw new BadRequestException('Студента с таким id не существует');
     }
 
-    try {
-      const updatedStudent = await this.prisma.student.update({
+    const updatedStudent = await this.prisma.student.update({
+      where: {
+        id,
+      },
+      data: {
+        firstName,
+        middleName,
+        lastName,
+        birthDate,
+      },
+      include: {
+        courses: true,
+        schedule: {
+          include: {
+            times: true,
+          },
+        },
+      },
+    });
+
+    if (times) {
+      await this.prisma.times.deleteMany({
+        where: {
+          scheduleId: updatedStudent.scheduleId,
+        },
+      });
+
+      // Создание новых записей times и связанных time объектов
+      for (const t of times) {
+        const newTimes = await this.prisma.times.create({
+          data: {
+            day: t.day,
+            scheduleId: updatedStudent.schedule.id,
+          },
+        });
+
+        await this.prisma.time.createMany({
+          data: t.time.map((time) => ({
+            startTime: time.startTime,
+            endTime: time.endTime,
+            timesId: newTimes.id,
+          })),
+        });
+      }
+
+      return await this.prisma.student.findFirst({
         where: {
           id,
-        },
-        data: {
-          firstName,
-          middleName,
-          lastName,
-          birthDate,
         },
         include: {
           courses: true,
@@ -171,42 +209,8 @@ export class StudentService {
           },
         },
       });
-
-      if (times) {
-        await this.prisma.times.deleteMany({
-          where: {
-            scheduleId: updatedStudent.scheduleId,
-          },
-        });
-
-        await this.prisma.times.createMany({
-          data: times.map((t) => ({
-            day: t.day,
-            time: t.time,
-            scheduleId: updatedStudent.scheduleId,
-          })),
-        });
-
-        return await this.prisma.student.findFirst({
-          where: {
-            id,
-          },
-          include: {
-            courses: true,
-            schedule: {
-              include: {
-                times: true,
-              },
-            },
-          },
-        });
-      }
-
-      return updatedStudent;
-    } catch (e) {
-      throw new BadRequestException(
-        'Произошла ошибка при обновлении данных обучающегося.',
-      );
     }
+
+    return updatedStudent;
   }
 }
