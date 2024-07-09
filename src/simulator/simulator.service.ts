@@ -89,11 +89,7 @@ export class SimulatorService {
   async findSimulatorsOnCourse(courseId: string) {
     const simulators = await this.prisma.simulator.findMany({
       where: {
-        events: {
-          every: {
-            courseId: courseId,
-          },
-        },
+        courseId,
       },
     });
 
@@ -104,7 +100,7 @@ export class SimulatorService {
     const simulators = await this.prisma.simulator.findMany({
       where: {
         events: {
-          every: {
+          some: {
             id: eventId,
           },
         },
