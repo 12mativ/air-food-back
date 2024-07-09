@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
-import { GetStudentsResponseDto } from './dto/res-get-students.dto';
 import { UpdateStudentRequestDto } from './dto/req-update-student.dto';
+import { GetStudentsResponseDto } from './dto/res-get-students.dto';
 
 @Injectable()
 export class StudentService {
