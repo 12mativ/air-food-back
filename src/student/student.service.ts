@@ -204,7 +204,11 @@ export class StudentService {
           courses: true,
           schedule: {
             include: {
-              times: true,
+              times: {
+                include: {
+                  time: true
+                }
+              },
             },
           },
         },
