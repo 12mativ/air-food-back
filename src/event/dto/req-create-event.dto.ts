@@ -1,11 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDateString, IsString } from 'class-validator';
 
-export class CreateEventDto {
+export class ReqCreateEventDto {
   @ApiProperty()
   @IsString()
   name: string;
-  
+
   @ApiProperty()
   @IsDateString()
   startDate: string;
