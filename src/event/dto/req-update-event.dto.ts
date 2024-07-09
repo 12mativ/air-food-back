@@ -1,8 +1,8 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsDateString, IsOptional, IsString } from 'class-validator';
-import { CreateEventDto } from './req-create-event.dto';
+import { ReqCreateEventDto } from './req-create-event.dto';
 
-export class UpdateEventDto extends PartialType(CreateEventDto) {
+export class UpdateEventDto extends PartialType(ReqCreateEventDto) {
   @ApiProperty()
   @IsString()
   @IsOptional()

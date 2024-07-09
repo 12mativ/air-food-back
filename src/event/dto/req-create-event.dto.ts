@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString, IsString, MinLength } from "class-validator";
 
-export class CreateEventDto {
+export class ReqCreateEventDto {
   @ApiProperty()
   @MinLength(1, {message: "Имя мероприятия должно содержать хотя бы один символ"})
   @IsString()
   name: string;
-  
+
   @ApiProperty()
   @IsDateString()
   startDate: string;

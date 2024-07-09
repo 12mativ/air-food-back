@@ -27,10 +27,12 @@ model Student {
   birthDate  String? @db.Text
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   schedule       Schedule    @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  curriculum Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
 
   competences StudentCompetenceCharacteristic[]
   userId      String                               @unique
   scheduleId      String                               @unique
+  curriculumId      String                               @unique
   courses     Course[]
 }
 
@@ -159,6 +161,8 @@ model Time {
 model Curriculum {
   id              String        @id @default(uuid())
   cirriculumEvents Event[]
+
+  student Student?
 }
 
 enum Days {
