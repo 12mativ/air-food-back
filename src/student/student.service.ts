@@ -206,8 +206,8 @@ export class StudentService {
             include: {
               times: {
                 include: {
-                  time: true
-                }
+                  time: true,
+                },
               },
             },
           },
