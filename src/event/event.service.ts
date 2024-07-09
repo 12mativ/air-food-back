@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 
-import { CreateEventDto } from './dto/req-create-event.dto';
+import { ReqCreateEventDto } from './dto/req-create-event.dto';
 import { UpdateEventDeleteCoachDto } from './dto/req-update-event-delete-coach.dto';
 import { updateEventDeleteSimulatorDto } from './dto/req-update-event-delete-simulator.dto';
 import { UpdateEventDto } from './dto/req-update-event.dto';
@@ -15,7 +15,7 @@ export class EventService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async create(createEventDto: CreateEventDto) {
+  async create(createEventDto: ReqCreateEventDto) {
     const course = await this.prisma.course.findFirst({
       where: {
         id: createEventDto.courseId,
@@ -26,7 +26,7 @@ export class EventService {
       throw new BadRequestException('Курса с таким id не существует');
     }
 
-    if(new Date(createEventDto.startDate) > new Date(createEventDto.endDate)){
+    if (new Date(createEventDto.startDate) > new Date(createEventDto.endDate)) {
       throw new BadRequestException('Дата начала больше даты окончания');
     }
 

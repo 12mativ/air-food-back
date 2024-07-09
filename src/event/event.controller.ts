@@ -11,7 +11,7 @@ import {
 import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Role } from '../role/role.enum';
 import { Roles } from '../roles/roles.decorator';
-import { CreateEventDto } from './dto/req-create-event.dto';
+import { ReqCreateEventDto } from './dto/req-create-event.dto';
 import { UpdateEventDeleteCoachDto } from './dto/req-update-event-delete-coach.dto';
 import { updateEventDeleteSimulatorDto } from './dto/req-update-event-delete-simulator.dto';
 import { UpdateEventDto } from './dto/req-update-event.dto';
@@ -26,7 +26,7 @@ export class EventController {
   @Post()
   @ApiOkResponse({ type: ResGetEventDto })
   @Roles(Role.ADMIN, Role.COURSE_ORGANISER)
-  create(@Body() createEventDto: CreateEventDto) {
+  create(@Body() createEventDto: ReqCreateEventDto) {
     return this.eventService.create(createEventDto);
   }
 

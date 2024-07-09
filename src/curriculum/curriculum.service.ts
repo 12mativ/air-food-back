@@ -3,6 +3,7 @@ import { CreateCurriculumDto } from './dto/create-curriculum.dto';
 import { UpdateCurriculumDto } from './dto/update-curriculum.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ReqUpdateTimesDto } from '../student/dto/req-update-times.dto';
+import { ResGetEventDto } from '../event/dto/res-get-event.dto';
 
 @Injectable()
 export class CurriculumService {
@@ -182,6 +183,37 @@ export class CurriculumService {
     }
 
     console.log('Selected courses: ', selectedCourses);
+
+    const finalEvents: ResGetEventDto[] = []
+    selectedCourses.forEach(sc => {
+      finalEvents.push(...sc.events)
+    })
+    const studentId = createCurriculumDto.currentCompetencies[0].studentId;
+    // await this.prisma.curriculum.create({
+    //   data: {
+    //     cirriculumEvents: {
+    //       createMany: {
+    //         data: finalEvents.map((fe) => {
+              
+    //         })
+    //       }
+    //     }
+    //   }
+    // })
+    // await this.prisma.student.update({
+    //   where: {
+    //     id: studentId
+    //   },
+    //   data: {
+    //     curriculum: {
+    //       connect: {
+    //         id: 
+    //       }
+    //     }
+    //   }
+    // })
+
+    return finalEvents;
   }
 
   findOne(id: number) {
