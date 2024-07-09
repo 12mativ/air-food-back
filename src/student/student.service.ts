@@ -75,7 +75,11 @@ export class StudentService {
           },
           schedule: {
             include: {
-              times: true,
+              times: {
+                include: {
+                  time: true
+                }
+              },
             },
           },
         },
@@ -122,7 +126,11 @@ export class StudentService {
           include: {
             schedule: {
               include: {
-                times: true,
+                times: {
+                  include: {
+                    time: true
+                  }
+                },
               },
             },
           },
@@ -165,7 +173,11 @@ export class StudentService {
         courses: true,
         schedule: {
           include: {
-            times: true,
+            times: {
+              include: {
+                time: true
+              }
+            },
           },
         },
       },
