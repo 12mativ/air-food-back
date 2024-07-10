@@ -29,11 +29,12 @@ model Student {
   schedule       Schedule    @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   curriculum Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
 
-  competences StudentCompetenceCharacteristic[]
+  competencies StudentCompetenceCharacteristic[]
+  expectingCompetencies StudentExpectingCompetence[]
+  courses     Course[]
   userId      String                               @unique
   scheduleId      String                               @unique
   curriculumId      String                               @unique
-  courses     Course[]
 }
 
 model Course {
@@ -55,9 +56,10 @@ model Competence {
   id   String @id @default(uuid())
   name String @db.Text
 
-  improvingCompetence                ImprovingCompetence[]
-  competenceCharacteristicForCourse  CourseCompetenceCharacteristic[]
-  competenceCharacteristicForStudent StudentCompetenceCharacteristic[]
+  improvingCompetencies                ImprovingCompetence[]
+  studentExpectingCompetencies StudentExpectingCompetence[]
+  competenciesCharacteristicForCourse  CourseCompetenceCharacteristic[]
+  competenciesCharacteristicForStudent StudentCompetenceCharacteristic[]
 }
 
 model ImprovingCompetence {
@@ -82,6 +84,17 @@ model StudentCompetenceCharacteristic {
 
   student    Student?   @relation(fields: [studentId], references: [id], onDelete: Cascade)
   competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)
+}
+
+model StudentExpectingCompetence {
+  id         String @id @default(uuid())
+  scaleValue Int    @db.SmallInt
+
+  competenceId String
+  studentId    String?
+
+  student    Student?   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  competence Competence @relation(fields: [competenceId], references: [id], onDelete: Cascade)  
 }
 
 model CourseCompetenceCharacteristic {

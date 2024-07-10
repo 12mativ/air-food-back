@@ -68,7 +68,12 @@ export class StudentService {
         },
         include: {
           courses: true,
-          competences: {
+          competencies: {
+            include: {
+              competence: true,
+            },
+          },
+          expectingCompetencies: {
             include: {
               competence: true,
             },
@@ -94,14 +99,23 @@ export class StudentService {
         },
         include: {
           courses: true,
-          competences: {
+          competencies: {
+            include: {
+              competence: true,
+            },
+          },
+          expectingCompetencies: {
             include: {
               competence: true,
             },
           },
           schedule: {
             include: {
-              times: true,
+              times: {
+                include: {
+                  time: true
+                }
+              },
             },
           },
         },

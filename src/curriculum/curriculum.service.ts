@@ -52,7 +52,27 @@ export class CurriculumService {
   }
 
   async create(createCurriculumDto: CreateCurriculumDto) {
-    let expectedCompetenciesIds = createCurriculumDto.expectedCompetencies.map(
+    const student = await this.prisma.student.findFirst({
+      where: {
+        id: createCurriculumDto.studentId
+      },
+      include: {
+        expectingCompetencies: {
+          include: {
+            competence: true
+          }
+        },
+        competencies: {
+          include: {
+            competence: true
+          }
+        }
+      }
+    })
+
+    const {competencies, expectingCompetencies} = student
+
+    let expectedCompetenciesIds = student.expectingCompetencies.map(
       (ec) => ec.competenceId,
     );
     let firstStageCoursesCandidates = [];
@@ -76,11 +96,11 @@ export class CurriculumService {
       c.improvingCompetencies.forEach((ic) => {
         if (expectedCompetenciesIds.includes(ic.competenceId)) {
           const currentCompetency =
-            createCurriculumDto.currentCompetencies.find(
+            competencies.find(
               (cc) => cc.competenceId === ic.competenceId,
             );
           const expectedCompetency =
-            createCurriculumDto.expectedCompetencies.find(
+            expectingCompetencies.find(
               (ec) => ec.competenceId === ic.competenceId,
             );
           if (
@@ -114,24 +134,27 @@ export class CurriculumService {
 
     // Жадный алгоритм для минимизации количества курсов
     let selectedCourses = [];
-    let currentCompetencies = [...createCurriculumDto.currentCompetencies];
+    let currentCompetencies = [...competencies];
 
     while (expectedCompetenciesIds.length > 0) {
       let bestCourse = null;
       let bestImprovement = 0;
 
+      // Найти курс, который дает наибольшее улучшение компетенций
       secondStageCoursesCandidates.forEach((course) => {
         let totalImprovement = 0;
 
+        // Рассчитать общую пользу от улучшения компетенций для данного курса
         course.improvingCompetencies.forEach((ic) => {
           const currentCompetency = currentCompetencies.find(
             (cc) => cc.competenceId === ic.competenceId,
           );
           const expectedCompetency =
-            createCurriculumDto.expectedCompetencies.find(
+            expectingCompetencies.find(
               (ec) => ec.competenceId === ic.competenceId,
             );
           if (currentCompetency && expectedCompetency) {
+            // Вычислить улучшение, которое дает данный курс для данной компетенции
             const improvement = Math.min(
               expectedCompetency.scaleValue - currentCompetency.scaleValue,
               ic.improvingValue,
@@ -142,6 +165,7 @@ export class CurriculumService {
           }
         });
 
+        // Сравнить с наилучшим найденным улучшением и обновить, если текущий курс лучше
         if (totalImprovement > bestImprovement) {
           bestImprovement = totalImprovement;
           bestCourse = course;
@@ -149,11 +173,13 @@ export class CurriculumService {
       });
 
       if (bestCourse) {
+        // Добавить лучший курс в список выбранных курсов
         selectedCourses.push(bestCourse);
         secondStageCoursesCandidates.splice(
           secondStageCoursesCandidates.indexOf(bestCourse),
           1,
         );
+        // Обновить текущие компетенции студента на основе выбранного курса
         bestCourse.improvingCompetencies.forEach((ic) => {
           const currentCompetency = currentCompetencies.find(
             (cc) => cc.competenceId === ic.competenceId,
@@ -161,14 +187,15 @@ export class CurriculumService {
           if (currentCompetency) {
             currentCompetency.scaleValue = Math.min(
               currentCompetency.scaleValue + ic.improvingValue,
-              createCurriculumDto.expectedCompetencies.find(
+              expectingCompetencies.find(
                 (ec) => ec.competenceId === ic.competenceId,
               ).scaleValue,
             );
           }
         });
 
-        expectedCompetenciesIds = createCurriculumDto.expectedCompetencies
+        // Обновить список компетенций, которые еще не достигли нужного уровня
+        expectedCompetenciesIds = expectingCompetencies
           .filter(
             (ec) =>
               currentCompetencies.find(
@@ -188,7 +215,55 @@ export class CurriculumService {
     selectedCourses.forEach(sc => {
       finalEvents.push(...sc.events)
     })
-    const studentId = createCurriculumDto.currentCompetencies[0].studentId;
+
+    const eventIds = selectedCourses.flatMap(course => course.events.map(event => event.id));
+    await this.prisma.event.deleteMany({
+      where: {
+        id: { in: eventIds }
+      }
+    });
+
+    // Добавить мероприятия выбранных курсов в существующий учебный план
+    await this.prisma.event.createMany({
+      data: selectedCourses.flatMap(course => course.events.map(event => ({
+        id: event.id,
+        name: event.name,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        courseId: event.courseId,
+        curriculumId: createCurriculumDto.curriculumId
+      })))
+    });
+
+    const curriculum = await this.prisma.curriculum.findFirst({
+      where: {
+        id: createCurriculumDto.curriculumId
+      },
+      include: {
+        cirriculumEvents: true
+      }
+    })
+
+    return curriculum;
+    // const curriculum = await this.prisma.curriculum.update({
+    //   where: {
+    //     id: createCurriculumDto.curriculumId
+    //   },
+    //   data: {
+    //     cirriculumEvents: {
+    //       create: selectedCourses.flatMap(course => course.events.map(event => ({
+    //         id: event.id,
+    //         name: event.name,
+    //         startDate: event.startDate,
+    //         endDate: event.endDate,
+    //         courseId: event.courseId
+    //       })))
+    //     }
+    //   },
+    //   include: {
+    //     cirriculumEvents: true
+    //   }
+    // })
     // await this.prisma.curriculum.create({
     //   data: {
     //     cirriculumEvents: {
@@ -213,7 +288,7 @@ export class CurriculumService {
     //   }
     // })
 
-    return finalEvents;
+
   }
 
   findOne(id: number) {

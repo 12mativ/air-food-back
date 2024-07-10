@@ -12,6 +12,7 @@ import { ImprovingCompetenceModule } from './improving-competence/improving-comp
 import { StudentCompetenceCharacteristicModule } from './student-competence-characteristic/student-competence-characteristic.module';
 import { CourseCompetenceCharacteristicModule } from './course-competence-characteristic/course-competence-characteristic.module';
 import { CurriculumModule } from './curriculum/curriculum.module';
+import { StudentExpectingCompetenceModule } from './student-expecting-competence/student-expecting-competence.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CurriculumModule } from './curriculum/curriculum.module';
     StudentCompetenceCharacteristicModule,
     CourseCompetenceCharacteristicModule,
     CurriculumModule,
+    StudentExpectingCompetenceModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],
